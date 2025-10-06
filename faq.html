@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FAQ | Key Safe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: #232326;
+            --card-bg: #3a3a3e;
+            --primary: #2d8cff;
+            --primary-hover: #2063bb;
+            --text: #fff;
+            --muted: #b0b6c4;
+            --danger: #ff5757;
+            --warn: #ffb627;
+            --success: #30cf7b;
+            --bar-bg: #3a3a3e;
+            --card-radius: 18px;
+            --card-padding: 32px 24px;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--background);
+            color: var(--text);
+            font-family: 'Inter', Arial, sans-serif;
+            min-height: 100vh;
+        }
+        .top-bar {
+            width: 100%;
+            height: 60px;
+            background: var(--bar-bg);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+        .bar-left {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--text);
+        }
+        .bar-menu {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            cursor: pointer;
+            position: relative;
+            z-index: 101;
+            background: none;
+            border: none;
+        }
+        .bar-menu-bars, .bar-menu-x {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .bar-menu-bars span {
+            display: block;
+            height: 4px;
+            width: 100%;
+            background: #fff;
+            margin: 3.5px 0;
+            border-radius: 2px;
+            transition: background 0.3s;
+        }
+        .bar-menu-x {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            background: none;
+        }
+        .bar-menu-x span {
+            position: absolute;
+            width: 24px;
+            height: 4px;
+            top: 50%;
+            left: 50%;
+            background: #fff;
+            border-radius: 2px;
+            transition:
+                transform 0.35s cubic-bezier(.55,.06,.68,.19),
+                opacity 0.18s,
+                background 0.2s;
+        }
+        .bar-menu-x .x1 {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+        .bar-menu-x .x2 {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+        .menu-overlay .bar-menu-x {
+            display: flex !important;
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            z-index: 201;
+            background: none;
+        }
+        .menu-overlay .bar-menu-x:hover span {
+            background: var(--primary);
+        }
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--menu-bg);
+            color: #fff;
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--menu-fade);
+            background-color: #3a3a3e;
+        }
+        .menu-overlay.active {
+            display: flex;
+            pointer-events: all;
+            opacity: 1;
+            animation: fadeInMenu 0.4s;
+        }
+        .menu-overlay.closing {
+            opacity: 0;
+            pointer-events: none;
+            animation: fadeOutMenu 0.35s cubic-bezier(.55,.06,.68,.19);
+        }
+        @keyframes fadeInMenu {
+            from { opacity: 0;}
+            to { opacity: 1;}
+        }
+        @keyframes fadeOutMenu {
+            from { opacity: 1;}
+            to { opacity: 0;}
+        }
+        .menu-list {
+            width: 90%;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+        .menu-item-card, .menu-item-card-logout {
+            background: #232326;
+            color: #fff;
+            border-radius: 12px;
+            padding: 0;
+            box-shadow: 0 4px 14px #0003;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: none;
+            outline: none;
+        }
+        .menu-item {
+            font-size: 1.3rem;
+            padding: 24px 0;
+            text-align: center;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            background: none;
+            transition: color 0.2s;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        .menu-item-card:hover, .menu-item-card:focus-within {
+            box-shadow: 0 4px 20px #2d8cff55, 0 2px 8px #0005;
+        }
+        .menu-item-card:hover .menu-item, .menu-item-card:focus-within .menu-item {
+            color: var(--primary);
+            background: none;
+        }
+        .menu-item-card-logout:hover, .menu-item-card-logout:focus-within {
+            background: var(--danger) !important;
+            box-shadow: 0 4px 20px #ff575733, 0 2px 8px #0005;
+        }
+        .menu-item-card-logout:hover .menu-item, .menu-item-card-logout:focus-within .menu-item {
+            color: #fff !important;
+        }
+
+        @media (max-width: 600px) {
+            .top-bar {
+                padding: 0 12px;
+            }
+            .menu-list {
+                max-width: 99vw;
+                width: 99vw;
+                border-radius: 0;
+                margin-top: 62px;
+            }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 90px 32px 32px 32px;
+            min-height: 100vh;
+            box-sizing: border-box;
+            gap: 32px;
+        }
+        .faq-header-card {
+            background: var(--card-bg);
+            border-radius: var(--card-radius);
+            box-shadow: 0 4px 24px #0007;
+            padding: var(--card-padding);
+            width: 100%;
+            max-width: 700px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-start;
+            box-sizing: border-box;
+        }
+        .faq-header-card h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 0 12px 0;
+            letter-spacing: 1px;
+        }
+        .faq-header-card .version {
+            font-size: 1.05rem;
+            color: var(--muted);
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        .faq-card-list {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 30px;
+            width: 100%;
+            justify-content: center;
+            margin-top: 8px;
+        }
+        .faq-card {
+            background: var(--card-bg);
+            border-radius: var(--card-radius);
+            box-shadow: 0 3px 16px #0005;
+            padding: 32px 22px;
+            min-width: 320px;
+            max-width: 480px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+            box-sizing: border-box;
+            align-items: flex-start;
+        }
+        .faq-q {
+            font-size: 1.13rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 3px;
+        }
+        .faq-a {
+            font-size: 1.06rem;
+            color: var(--muted);
+            margin-left: 6px;
+            margin-bottom: 0;
+            line-height: 1.62;
+        }
+        .info {
+            color: var(--muted);
+            font-size: 0.97em;
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+        @media (max-width: 1200px) {
+            .faq-card-list {
+                flex-direction: column;
+                gap: 20px;
+                align-items: stretch;
+            }
+            .faq-card {
+                max-width: 100vw;
+                min-width: 0;
+            }
+        }
+        @media (max-width: 900px) {
+            .container {
+                padding: 80px 4vw 20px 4vw;
+            }
+            .faq-header-card, .faq-card {
+                max-width: 100vw;
+                min-width: 0;
+            }
+        }
+
+        /* Fade in on load */
+        @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(32px) scale(0.96);}
+        to   { opacity: 1; transform: translateY(0) scale(1);}
+        }
+
+        /* Fade in with slight zoom */
+        @keyframes fadeInZoom {
+        from { opacity: 0; transform: scale(0.95);}
+        to   { opacity: 1; transform: scale(1);}
+        }
+
+        /* Fade out */
+        @keyframes fadeOut {
+        from { opacity: 1;}
+        to   { opacity: 0;}
+        }
+
+        /* Subtle scale on hover (for cards/buttons) */
+        .card, .menu-item-card, .generate-btn, .alternate-password, .back-btn {
+        transition: transform 0.22s cubic-bezier(.55,.06,.68,.19), box-shadow 0.22s;
+        }
+        .card:hover, .menu-item-card:hover, .generate-btn:hover, .alternate-password:hover, .back-btn:hover {
+        transform: scale(1.04);
+        box-shadow: 0 8px 32px #2d8cff33, 0 2px 12px #0003;
+        }
+
+        /* Menu overlay fade in/out */
+        .menu-overlay {
+        animation: fadeInZoom 0.5s cubic-bezier(.55,.06,.68,.19);
+        }
+        .menu-overlay.closing {
+        animation: fadeOut 0.32s cubic-bezier(.55,.06,.68,.19);
+        }
+
+        /* Fade in for password outputs, suggestions, faq cards */
+        .password-output, .suggestion, .faq-card, .alternate-password {
+        animation: fadeInUp 0.6s cubic-bezier(.55,.06,.68,.19);
+        }
+
+        /* Fade-in stagger for multiple items (use inline style or nth-child) */
+        .faq-card:nth-child(1) { animation-delay: 0.04s; }
+        .faq-card:nth-child(2) { animation-delay: 0.08s; }
+        .faq-card:nth-child(3) { animation-delay: 0.12s; }
+        /* ... add more for more items */
+
+        /* Animated strength bar fill */
+        .strength-bar {
+        transition: width 0.33s cubic-bezier(.55,.06,.68,.19), background 0.2s;
+        }
+
+        /* Animate top-bar in */
+        .top-bar {
+        animation: fadeInZoom 0.5s cubic-bezier(.55,.06,.68,.19);
+        }
+
+        /* Button press effect */
+        .generate-btn:active, .back-btn:active {
+        transform: scale(0.97);
+        }
+
+        /* Copied badge fade in/out */
+        .copied-badge {
+        animation: fadeInZoom 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="bar-left" id="barLeft">FAQ</div>
+        <button class="bar-menu" id="barMenuBtn" title="Open menu" aria-label="Menu">
+            <div class="bar-menu-bars" id="menuBars" style="display:flex">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </button>
+    </div>
+    <div class="menu-overlay" id="menuOverlay">
+        <div class="bar-menu-x" id="menuX" style="display:flex">
+            <span class="x1"></span>
+            <span class="x2"></span>
+        </div>
+        <div class="menu-list">
+            <div class="menu-item-card home" id="menuHome">
+                <div class="menu-item">Home</div>
+            </div>
+            <div class="menu-item-card"><div class="menu-item" id="menuPasswordMaker">Password Maker</div></div>
+            <div class="menu-item-card"><div class="menu-item" id="menuPasswordChecker">Password Security Checker</div></div>
+            <div class="menu-item-card"><div class="menu-item" id="menuSavedPasswords">Saved Passwords</div></div>
+            <div class="menu-item-card"><div class="menu-item" id="menuFAQ">FAQ</div></div>
+            <div class="menu-item-card"><div class="menu-item" id="menuAbout">About</div></div>
+            <div class="menu-item-card logout" id="menuLogoutCard"><div class="menu-item" id="menuLogout">Log Out</div></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="faq-header-card">
+            <h2>Frequently Asked Questions</h2>
+            <div class="version">Key Safe Version: <span id="versionNum">v1.30.0</span></div>
+            <div class="info">Have more questions? Reach out via the About section or the support contact.</div>
+        </div>
+        <div class="faq-card-list">
+            <div class="faq-card">
+                <div class="faq-q">Q: Is Key Safe free to use?</div>
+                <div class="faq-a">A: Yes, Key Safe is free for personal use. An account is required.</div>
+            </div>
+            <div class="faq-card">
+                <div class="faq-q">Q: Does Key Safe store my passwords?</div>
+                <div class="faq-a">A: No, passwords generated or checked are never stored. Only saved passwords you choose are stored in your account.</div>
+            </div>
+            <div class="faq-card">
+                <div class="faq-q">Q: How is password strength calculated?</div>
+                <div class="faq-a">A: Password strength is based on length, character variety (uppercase, lowercase, numbers, symbols), and avoidance of common patterns or repeated characters.</div>
+            </div>
+            <div class="faq-card">
+                <div class="faq-q">Q: Can I recover or view previously generated passwords?</div>
+                <div class="faq-a">A: No, unless you explicitly save a password in your account, generated passwords are never stored and cannot be recovered.</div>
+            </div>
+            <div class="faq-card">
+                <div class="faq-q">Q: Why do suggestions disappear if my password is very strong?</div>
+                <div class="faq-a">A: If your password meets all recommended criteria, there are no further suggestions to improve it.</div>
+            </div>
+            <div class="faq-card">
+                <div class="faq-q">Q: What is the best way to make a strong password?</div>
+                <div class="faq-a">A: Use 12+ characters, include uppercase and lowercase letters, numbers, and symbols. Avoid common words and patterns.</div>
+            </div>
+            <div class="faq-card">
+                <div class="faq-q">Q: Can I check the strength of saved passwords?</div>
+                <div class="faq-a">A: Yes, you can check and update saved passwords using the Password Security Checker.</div>
+            </div>
+            <div class="faq-card">
+                <div class="faq-q">Q: How do I report a bug or suggest a feature?</div>
+                <div class="faq-a">A: Navigate to the about page, then email the problem.</div>
+            </div>
+            <div class="faq-card">
+                <div class="faq-q">Q: Is there a mobile app for Key Safe?</div>
+                <div class="faq-a">A: Currently, Key Safe is a web application. A mobile app may be considered in the future.</div>
+            </div>
+            <div class="faq-card">
+                <div class="faq-q">Q: How do I log out?</div>
+                <div class="faq-a">A: Open the menu (top right) and click "Log Out" at the bottom.</div>
+            </div>
+            <div class="faq-card">
+                <div class="faq-q">Q: What if I forget my password?</div>
+                <div class="faq-a">A: If you forget your account password, you permanently lose your account until you get the right password.</div>
+            </div>
+            <div class="faq-card">
+                <div class="faq-q">Q: How do I delete my account?</div>
+                <div class="faq-a">A: Currently, account deletion is not supported. Please contact support for assistance.</div>
+            </div>
+            <div class="faq-card">
+                <div class="faq-q">Q: Is Key Safe secure?</div>
+                <div class="faq-a">A: Key Safe is currently not secure, security implementations will begin rolling out in future updates.</div>
+            </div>
+        </div>
+    <script>
+        // Menu toggle and X animation
+        const menuBtn = document.getElementById("barMenuBtn");
+        const menuOverlay = document.getElementById("menuOverlay");
+        const menuBars = document.getElementById("menuBars");
+        const menuX = document.getElementById("menuX");
+        let menuOpen = false;
+        let menuCloseTimeout = null;
+
+        menuBtn.onclick = function(e) {
+            e.stopPropagation();
+            if (!menuOpen) {
+                menuOverlay.classList.add("active");
+                menuOverlay.classList.remove("closing");
+                menuBars.style.display = "none";
+                menuOpen = true;
+            }
+        };
+        menuX.onclick = function(e) {
+            e.stopPropagation();
+            if (menuOpen) {
+                menuOverlay.classList.remove("active");
+                menuOverlay.classList.add("closing");
+                menuBars.style.display = "flex";
+                menuOpen = false;
+                clearTimeout(menuCloseTimeout);
+                menuCloseTimeout = setTimeout(() => {
+                    menuOverlay.classList.remove("closing");
+                }, 350);
+            }
+        };
+        menuOverlay.onclick = function(e) {
+            if(e.target === menuOverlay && menuOpen) {
+                menuX.onclick(e);
+            }
+        };
+        function closeMenu() {
+            if (menuOpen) {
+                menuX.onclick(new Event("click"));
+            }
+        }
+
+        // Menu item navigation
+        document.getElementById("menuHome").onclick = function() {
+            closeMenu();
+            window.location.href = "index.html";
+        };
+        document.getElementById("menuPasswordMaker").onclick = function() {
+            closeMenu();
+            window.location.href = "password_maker.html";
+        };
+        document.getElementById("menuPasswordChecker").onclick = function() {
+            closeMenu();
+            window.location.href = "password_checker.html";
+        };
+        document.getElementById("menuSavedPasswords").onclick = function() {
+            closeMenu();
+            window.location.href = "password_saved.html";
+        };
+        document.getElementById("menuFAQ").onclick = function() {
+            closeMenu();
+            window.location.href = "faq.html";
+        };
+        document.getElementById("menuAbout").onclick = function() {
+            closeMenu();
+            window.open("https://kingfarooq.github.io", "_blank");
+        };
+        document.getElementById("menuLogout").onclick = function() {
+            localStorage.removeItem("keysafe-logged-in");
+            window.location.href = "login_signup.html";
+        };
+
+        // Security: If user is not logged in, redirect to login (optional)
+        if (!localStorage.getItem("keysafe-logged-in")) {
+            window.location.href = "login_signup.html";
+        }
+    </script>
+</body>
+</html>
+
+<!--
+    Notes:
+    - Organized Q&A
+    - Clean UI
+    
+-->

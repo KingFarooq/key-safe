@@ -1,419 +1,796 @@
+<!-- Declares this is an HTML5 document -->
 <!DOCTYPE html>
+<!-- Root element of the HTML document with language set to English -->
 <html lang="en">
 <head>
+    <!-- Specifies character encoding as UTF-8 for proper text display -->
     <meta charset="UTF-8">
-    <title>Key Safe - Login / Signup</title>
+    <!-- Makes page responsive by setting viewport to device width with initial zoom -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Page title shown in browser tab -->
+    <title>Key Safe - Secure Login & Signup</title>
+    <!-- Links to Google Fonts for Inter font family -->
     <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet">
+    <!-- Links to Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Internal CSS styles -->
     <style>
+        /* CSS custom properties (variables) for consistent theming */
         :root {
-            --background: #232326;
-            --container-bg: #3a3a3e;
-            --primary: #2d8cff;
-            --primary-hover: #2063bb;
-            --text: #f4f4f4;
-            --muted: #b0b6c4;
-            --input-bg: #3a3a3e;
-            --input-border: #44444b;
-            --error: #ff4f4f;
-            --success: #27ae60;
-            --tab-inactive: #3a3a3e;
-            --tab-active: #2d8cff;
-            --box-shadow: 0 0 16px 2px rgba(0,0,0,0.45);
+            --background: #0f172a;          /* Dark blue background */
+            --container-bg: #1e293b;        /* Slightly lighter container background */
+            --primary: #3b82f6;             /* Primary blue color */
+            --primary-hover: #2563eb;       /* Darker blue for hover states */
+            --text: #f8fafc;                /* Light text color */
+            --muted: #94a3b8;               /* Muted/gray text color */
+            --input-bg: #334155;            /* Input field background */
+            --input-border: #475569;        /* Input border color */
+            --error: #ef4444;               /* Red for error messages */
+            --success: #10b981;             /* Green for success messages */
+            --warning: #f59e0b;             /* Yellow/orange for warnings */
+            --tab-inactive: #1e293b;        /* Inactive tab background */
+            --tab-active: #3b82f6;          /* Active tab background */
+            --box-shadow: 0 10px 30px rgba(0,0,0,0.4); /* Shadow for depth */
+            --gradient: linear-gradient(135deg, #3b82f6, #8b5cf6); /* Blue to purple gradient */
         }
+       
+        /* Universal selector resets margin, padding, and uses border-box sizing */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* Includes padding and border in element's total width/height */
+        }
+       
+        /* Body styling */
         body {
-            font-family: 'Inter', Arial, sans-serif;
-            background: var(--background);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text);
+            font-family: 'Inter', Arial, sans-serif; /* Font stack with Inter as primary */
+            background: var(--background); /* Uses CSS variable for background */
+            min-height: 100vh; /* Ensures body takes at least full viewport height */
+            display: flex; /* Enables flexbox for centering */
+            align-items: center; /* Vertically centers content */
+            justify-content: center; /* Horizontally centers content */
+            color: var(--text); /* Text color from variable */
+            padding: 20px; /* Adds space around edges on mobile */
         }
+       
+        /* Main container styling */
         .container {
-            background: var(--container-bg);
-            padding: 32px 24px 24px 24px;
-            border-radius: 10px;
-            box-shadow: var(--box-shadow);
-            width: 340px;
-            animation: pop-in 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            background: var(--container-bg); /* Container background */
+            padding: 40px 30px 30px; /* Top, sides, bottom padding */
+            border-radius: 16px; /* Rounded corners */
+            box-shadow: var(--box-shadow); /* Depth effect */
+            width: 100%; /* Full width of parent */
+            max-width: 420px; /* Maximum width on larger screens */
+            animation: pop-in 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Entrance animation */
         }
+       
+        /* Keyframes for pop-in animation */
         @keyframes pop-in {
             from {
-                opacity: 0;
-                transform: scale(0.85) translateY(30px);
+                opacity: 0; /* Starts invisible */
+                transform: scale(0.85) translateY(30px); /* Starts smaller and lower */
             }
             to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
+                opacity: 1; /* Ends fully visible */
+                transform: scale(1) translateY(0); /* Ends at normal size and position */
             }
         }
+       
+        /* Title styling */
         .title {
-            text-align: center;
-            font-size: 2.1rem;
-            font-weight: bold;
-            margin-bottom: 22px;
-            letter-spacing: 2px;
-            color: var(--primary);
-            background: linear-gradient(90deg, var(--primary), #74f2ce, var(--primary));
-            background-size: 200% auto;
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 3s linear infinite;
+            text-align: center; /* Centers text horizontally */
+            font-size: 2.4rem; /* Large font size */
+            font-weight: 700; /* Bold weight */
+            margin-bottom: 30px; /* Space below title */
+            letter-spacing: 1px; /* Slight letter spacing for style */
+            color: var(--primary); /* Primary color */
         }
-        @keyframes shine {
-            0% {
-                background-position: 200% center;
-            }
-            100% {
-                background-position: 0% center;
-            }
-        }
+       
+        /* Tabs container */
         .tabs {
-            display: flex;
-            margin-bottom: 24px;
+            display: flex; /* Horizontal layout for tabs */
+            margin-bottom: 28px; /* Space below tabs */
+            background: rgba(30, 41, 59, 0.7); /* Semi-transparent background */
+            border-radius: 10px; /* Rounded corners */
+            padding: 4px; /* Inner spacing */
         }
+       
+        /* Individual tab styling */
         .tab {
-            flex: 1;
-            padding: 12px 0;
-            text-align: center;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            background: var(--tab-inactive);
-            color: var(--muted);
-            border-radius: 6px 6px 0 0;
-            transition: border-color 0.2s, color 0.2s, background 0.2s;
-            position: relative;
-            z-index: 1;
+            flex: 1; /* Each tab takes equal width */
+            padding: 14px 0; /* Vertical padding */
+            text-align: center; /* Centers tab text */
+            cursor: pointer; /* Changes cursor to indicate clickable */
+            border-radius: 8px; /* Rounded corners */
+            transition: all 0.3s ease; /* Smooth transition for all properties */
+            font-weight: 600; /* Semi-bold text */
+            color: var(--muted); /* Muted color for inactive tabs */
         }
-        .tab::after {
-            content: "";
-            display: block;
-            position: absolute;
-            left: 50%;
-            bottom: 0px;
-            width: 0;
-            height: 3px;
-            background: var(--primary);
-            border-radius: 2px;
-            transition: width 0.3s, left 0.3s;
-            z-index: -1;
-        }
-        .tab:hover::after {
-            left: 20%;
-            width: 60%;
-        }
+       
+        /* Active tab styling */
         .tab.active {
-            font-weight: bold;
-            border-bottom: 2.5px solid var(--tab-active);
-            color: var(--primary);
-            background: var(--container-bg);
+            color: white; /* White text */
+            background: var(--gradient); /* Gradient background */
         }
+       
+        /* Form styling */
         form {
-            display: flex;
-            flex-direction: column;
-            animation: fade-in 0.5s;
+            display: flex; /* Enables flexbox layout */
+            flex-direction: column; /* Stacks form elements vertically */
+            animation: fade-in 0.5s; /* Fade in animation */
         }
+       
+        /* Fade-in animation */
         @keyframes fade-in {
-            from { opacity: 0;}
-            to { opacity: 1;}
+            from { opacity: 0;} /* Starts invisible */
+            to { opacity: 1;} /* Ends fully visible */
         }
+       
+        /* Form group container for each input */
+        .form-group {
+            margin-bottom: 20px; /* Space between form groups */
+            position: relative; /* Allows absolute positioning of child elements */
+        }
+       
+        /* Input field styling for text, password, and email types */
         input[type="text"], input[type="password"], input[type="email"] {
-            margin-bottom: 18px;
-            padding: 12px;
-            border: 1.5px solid var(--input-border);
-            border-radius: 5px;
-            background: var(--input-bg);
-            color: var(--text);
-            font-size: 16px;
-            transition: border-color 0.2s, box-shadow 0.3s;
+            width: 100%; /* Full width of parent */
+            padding: 16px 50px 16px 45px; /* Generous padding, more on left for icon */
+            border: 2px solid var(--input-border); /* Border from variable */
+            border-radius: 10px; /* Rounded corners */
+            background: var(--input-bg); /* Background from variable */
+            color: var(--text); /* Text color from variable */
+            font-size: 16px; /* Standard font size */
+            transition: all 0.3s; /* Smooth transition for all properties */
         }
+       
+        /* Focus state for input fields */
         input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px #2d8cff33;
-            animation: input-focus 0.3s;
+            outline: none; /* Removes default browser outline */
+            border-color: var(--primary); /* Changes border to primary color */
         }
-        @keyframes input-focus {
-            0% {box-shadow: 0 0 0 0 #2d8cff33;}
-            100% {box-shadow: 0 0 0 2px #2d8cff33;}
+       
+        /* Icon inside input fields */
+        .input-icon {
+            position: absolute; /* Positions relative to .form-group */
+            left: 16px; /* Positions from left edge */
+            top: 50%; /* Centers vertically */
+            transform: translateY(-50%); /* Fine-tunes vertical centering */
+            color: var(--muted); /* Muted color */
         }
-        button {
-            background: linear-gradient(90deg, var(--primary), #74f2ce 70%, var(--primary));
-            color: #fff;
-            border: none;
-            padding: 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 17px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            margin-top: 4px;
-            transition: background 0.2s, transform 0.1s;
-            box-shadow: 0 2px 10px #2d8cff20;
+       
+        /* Container for password field with toggle button */
+        .password-container {
+            position: relative; /* Allows absolute positioning of toggle button */
         }
-        button:hover {
-            background: linear-gradient(90deg, var(--primary-hover), #43c6ac 70%, var(--primary-hover));
-            transform: translateY(-2px) scale(1.04);
+       
+        /* Password visibility toggle button */
+        .password-toggle {
+            position: absolute; /* Positions relative to .password-container */
+            right: 16px; /* Positions from right edge */
+            top: 50%; /* Centers vertically */
+            transform: translateY(-50%); /* Fine-tunes vertical centering */
+            background: none; /* No background */
+            border: none; /* No border */
+            color: var(--muted); /* Muted color */
+            cursor: pointer; /* Indicates clickable */
+            padding: 0; /* No padding */
+            font-size: 18px; /* Slightly larger icon */
+            transition: all 0.3s; /* Smooth transition */
         }
+       
+        /* Hover state for password toggle */
+        .password-toggle:hover {
+            color: var(--primary); /* Changes to primary color on hover */
+        }
+       
+        /* Remember me checkbox container */
+        .remember-me {
+            display: flex; /* Horizontal layout */
+            align-items: center; /* Vertically centers checkbox and label */
+            margin-bottom: 20px; /* Space below */
+            font-size: 15px; /* Slightly smaller text */
+        }
+       
+        /* Checkbox styling within remember-me */
+        .remember-me input {
+            margin-right: 10px; /* Space between checkbox and label */
+            accent-color: var(--primary); /* Custom checkbox color */
+        }
+       
+        /* Warning message for login attempts */
+        .attempts-warning {
+            color: var(--warning); /* Warning color */
+            font-size: 14px; /* Smaller text */
+            margin-bottom: 15px; /* Space below */
+            text-align: center; /* Centers text */
+            padding: 12px; /* Inner spacing */
+            border-radius: 8px; /* Rounded corners */
+        }
+       
+        /* Lockout message styling */
+        .lockout-message {
+            color: var(--error); /* Error/red color */
+            text-align: center; /* Centers text */
+            font-weight: bold; /* Bold text for emphasis */
+            margin-bottom: 15px; /* Space below */
+            padding: 12px; /* Inner spacing */
+            border-radius: 8px; /* Rounded corners */
+        }
+       
+        /* Base styling for error and success messages */
         .error, .success {
-            margin-bottom: 14px;
-            font-size: 15px;
+            margin-bottom: 15px; /* Space below */
+            font-size: 15px; /* Standard text size */
+            padding: 12px; /* Inner spacing */
+            border-radius: 8px; /* Rounded corners */
         }
+       
+        /* Specific error message styling */
         .error {
-            color: var(--error);
-            animation: shake 0.3s;
+            color: var(--error); /* Error color */
+            animation: shake 0.3s; /* Shake animation for attention */
         }
+       
+        /* Specific success message styling */
         .success {
-            color: var(--success);
-            animation: fade-in 0.5s;
+            color: var(--success); /* Success color */
+            animation: fade-in 0.5s; /* Fade in animation */
         }
+       
+        /* Shake animation for errors */
         @keyframes shake {
-            0% { transform: translateX(0);}
-            25% { transform: translateX(-5px);}
-            50% { transform: translateX(5px);}
-            75% { transform: translateX(-5px);}
-            100% { transform: translateX(0);}
+            0% { transform: translateX(0);} /* Starting position */
+            25% { transform: translateX(-5px);} /* Move left */
+            50% { transform: translateX(5px);} /* Move right */
+            75% { transform: translateX(-5px);} /* Move left again */
+            100% { transform: translateX(0);} /* Return to start */
         }
-        ::placeholder {
-            color: var(--muted);
-            opacity: 1;
+       
+        /* Button styling */
+        button {
+            background: var(--gradient); /* Gradient background */
+            color: #fff; /* White text */
+            border: none; /* No border */
+            padding: 16px; /* Generous padding */
+            border-radius: 10px; /* Rounded corners */
+            cursor: pointer; /* Indicates clickable */
+            font-size: 17px; /* Slightly larger text */
+            font-weight: 600; /* Semi-bold */
+            letter-spacing: 0.5px; /* Slight letter spacing */
+            margin-top: 10px; /* Space above */
+            transition: all 0.3s; /* Smooth transition */
         }
-        .dashboard, .home-page {
-            display:none;
-            animation: pop-in 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+       
+        /* Button hover effect */
+        button:hover {
+            transform: translateY(-2px); /* Lifts button slightly */
         }
-        .dashboard h1, .home-page h1 {
-            color: var(--primary);
-            text-align:center;
+       
+        /* Disabled login button styling */
+        .login-btn:disabled {
+            opacity: 0.6; /* Semi-transparent */
+            cursor: not-allowed; /* Shows not-allowed cursor */
+            transform: none; /* No hover transform */
         }
-        .dashboard p, .home-page p {
-            text-align:center;
+       
+        /* Disabled button hover state */
+        .login-btn:disabled:hover {
+            transform: none; /* No lift effect */
         }
-        .logout-btn {
-            display:block;
-            margin:30px auto 0 auto;
-            padding:10px 28px;
-            background: #ff4f4f;
-            color: #fff;
-            border:none;
-            border-radius:4px;
-            font-size:16px;
-            font-weight:bold;
-            cursor:pointer;
-            transition: background 0.15s;
+       
+        /* Session information text */
+        .session-info {
+            font-size: 13px; /* Small text */
+            color: var(--muted); /* Muted color */
+            text-align: center; /* Centers text */
+            margin-top: 20px; /* Space above */
+            padding-top: 15px; /* Top padding */
+            border-top: 1px solid rgba(255, 255, 255, 0.1); /* Subtle top border */
         }
-        .logout-btn:hover {
-            background:#ce2222;
+       
+        /* Password hint text */
+        .password-hint {
+            font-size: 12px; /* Very small text */
+            color: var(--muted); /* Muted color */
+            margin-top: 5px; /* Small space above */
         }
-        @media (max-width: 400px) {
+       
+        /* Media query for mobile screens */
+        @media (max-width: 480px) {
             .container {
-                width: 100vw;
-                min-width: unset;
-                margin: 0 5vw;
-                padding: 20px 5vw 20px 5vw;
+                padding: 30px 20px 25px; /* Reduced padding on mobile */
+            }
+           
+            .title {
+                font-size: 2rem; /* Smaller title on mobile */
             }
         }
     </style>
 </head>
 <body>
+    <!-- Main container for all content -->
     <div class="container" id="mainContainer">
+        <!-- Application title -->
         <div class="title">Key Safe</div>
+       
+        <!-- Tab navigation container -->
         <div class="tabs" id="tabs">
+            <!-- Login tab, active by default -->
             <div class="tab active" id="loginTab">Login</div>
+            <!-- Signup tab, inactive by default -->
             <div class="tab" id="signupTab">Signup</div>
         </div>
+       
+        <!-- Login form container, visible by default -->
         <div id="loginFormDiv">
+            <!-- Login form -->
             <form id="loginForm">
-                <input type="text" id="loginUsername" placeholder="Username" required autocomplete="username">
-                <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password">
+                <!-- Username input group -->
+                <div class="form-group">
+                    <i class="fas fa-user input-icon"></i> <!-- User icon -->
+                    <input type="text" id="loginUsername" placeholder="Username" required autocomplete="username">
+                </div>
+               
+                <!-- Password input group -->
+                <div class="form-group">
+                    <div class="password-container">
+                        <i class="fas fa-lock input-icon"></i> <!-- Lock icon -->
+                        <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password">
+                        <!-- Password visibility toggle button -->
+                        <button type="button" class="password-toggle" id="loginPasswordToggle">
+                            <i class="far fa-eye"></i> <!-- Eye icon -->
+                        </button>
+                    </div>
+                </div>
+               
+                <!-- Remember me checkbox -->
+                <div class="remember-me">
+                    <input type="checkbox" id="rememberMe"> <!-- Checkbox -->
+                    <label for="rememberMe">Remember me for 30 days</label> <!-- Label -->
+                </div>
+               
+                <!-- Dynamic warning messages -->
+                <div class="attempts-warning" id="attemptsWarning"></div>
+                <div class="lockout-message" id="lockoutMessage"></div>
                 <div class="error" id="loginError"></div>
-                <button type="submit">Login</button>
+               
+                <!-- Login submit button -->
+                <button type="submit" class="login-btn" id="loginBtn">Login</button>
+               
+                <!-- Session information display -->
+                <div class="session-info" id="sessionInfo"></div>
             </form>
         </div>
+       
+        <!-- Signup form container, hidden by default -->
         <div id="signupFormDiv" style="display:none;">
+            <!-- Signup form -->
             <form id="signupForm">
-                <input type="text" id="signupUsername" placeholder="Username" required autocomplete="username">
-                <input type="email" id="signupEmail" placeholder="Email" required autocomplete="email">
-                <input type="password" id="signupPassword" placeholder="Password" required autocomplete="new-password">
-                <input type="password" id="signupPassword2" placeholder="Repeat Password" required autocomplete="new-password">
+                <!-- Username input for signup -->
+                <div class="form-group">
+                    <i class="fas fa-user input-icon"></i> <!-- User icon -->
+                    <input type="text" id="signupUsername" placeholder="Username" required autocomplete="username">
+                </div>
+               
+                <!-- Email input for signup -->
+                <div class="form-group">
+                    <i class="fas fa-envelope input-icon"></i> <!-- Email icon -->
+                    <input type="email" id="signupEmail" placeholder="Email" required autocomplete="email">
+                </div>
+               
+                <!-- Password input for signup -->
+                <div class="form-group">
+                    <div class="password-container">
+                        <i class="fas fa-lock input-icon"></i> <!-- Lock icon -->
+                        <input type="password" id="signupPassword" placeholder="Password" required autocomplete="new-password">
+                        <!-- Password visibility toggle -->
+                        <button type="button" class="password-toggle" id="signupPasswordToggle">
+                            <i class="far fa-eye"></i> <!-- Eye icon -->
+                        </button>
+                    </div>
+                    <!-- Password requirement hint -->
+                    <div class="password-hint">Password must be at least 6 characters</div>
+                </div>
+               
+                <!-- Password confirmation input -->
+                <div class="form-group">
+                    <div class="password-container">
+                        <i class="fas fa-lock input-icon"></i> <!-- Lock icon -->
+                        <input type="password" id="signupPassword2" placeholder="Repeat Password" required autocomplete="new-password">
+                        <!-- Password visibility toggle -->
+                        <button type="button" class="password-toggle" id="signupPassword2Toggle">
+                            <i class="far fa-eye"></i> <!-- Eye icon -->
+                        </button>
+                    </div>
+                </div>
+               
+                <!-- Dynamic error and success messages -->
                 <div class="error" id="signupError"></div>
                 <div class="success" id="signupSuccess"></div>
-                <button type="submit">Signup</button>
+               
+                <!-- Signup submit button -->
+                <button type="submit">Create Account</button>
             </form>
         </div>
-        <div class="dashboard" id="dashboard">
-            <h1>Welcome to Key Safe!</h1>
-            <p id="dashboardUser"></p>
-            <button class="logout-btn" id="logoutBtn">Logout</button>
-        </div>
-        <div class="home-page" id="homePage">
-            <h1>Key Safe Home</h1>
-            <p id="homeUser"></p>
-            <button class="logout-btn" id="logoutBtnHome">Logout</button>
-        </div>
     </div>
-    <script>
-        
-        const loginTab = document.getElementById("loginTab");
-        const signupTab = document.getElementById("signupTab");
-        const loginFormDiv = document.getElementById("loginFormDiv");
-        const signupFormDiv = document.getElementById("signupFormDiv");
-        const dashboard = document.getElementById("dashboard");
-        const dashboardUser = document.getElementById("dashboardUser");
-        const logoutBtn = document.getElementById("logoutBtn");
-        const mainContainer = document.getElementById("mainContainer");
-        const tabs = document.getElementById("tabs");
-        const homePage = document.getElementById("homePage");
-        const homeUser = document.getElementById("homeUser");
-        const logoutBtnHome = document.getElementById("logoutBtnHome");
 
-        
+    <!-- JavaScript code -->
+    <script>
+        // ========== DOM ELEMENT REFERENCES ==========
+        // Stores references to HTML elements for easy access
+       
+        const loginTab = document.getElementById("loginTab"); // Login tab element
+        const signupTab = document.getElementById("signupTab"); // Signup tab element
+        const loginFormDiv = document.getElementById("loginFormDiv"); // Login form container
+        const signupFormDiv = document.getElementById("signupFormDiv"); // Signup form container
+        const loginBtn = document.getElementById("loginBtn"); // Login button
+        const attemptsWarning = document.getElementById("attemptsWarning"); // Login attempts warning element
+        const lockoutMessage = document.getElementById("lockoutMessage"); // Account lockout message element
+        const sessionInfo = document.getElementById("sessionInfo"); // Session info display element
+
+        // Password toggle button elements
+        const loginPasswordToggle = document.getElementById("loginPasswordToggle");
+        const signupPasswordToggle = document.getElementById("signupPasswordToggle");
+        const signupPassword2Toggle = document.getElementById("signupPassword2Toggle");
+
+        // Remember me checkbox element
+        const rememberMe = document.getElementById("rememberMe");
+
+        // ========== APPLICATION CONSTANTS ==========
+        // Defines security and timing parameters
+       
+        const MAX_LOGIN_ATTEMPTS = 5; // Maximum failed attempts before lockout
+        const LOGIN_ATTEMPT_WINDOW = 60 * 1000; // 1 minute window for counting attempts (in milliseconds)
+        const SESSION_TIMEOUT = 30 * 24 * 60 * 60 * 1000; // 30 days session timeout (in milliseconds)
+
+        // ========== STORAGE FUNCTIONS ==========
+        // Functions to interact with browser's localStorage
+       
+        // Retrieves all registered users from localStorage
         function getUsers() {
+            // Gets "keysafe-users" from localStorage, parses JSON, or returns empty object if none exists
             return JSON.parse(localStorage.getItem("keysafe-users") || "{}");
         }
+       
+        // Saves users object to localStorage
         function setUsers(users) {
+            // Converts users object to JSON string and stores it
             localStorage.setItem("keysafe-users", JSON.stringify(users));
         }
+       
+        // Stores login session data for currently logged-in user
         function setLoggedInUser(username) {
-            localStorage.setItem("keysafe-logged-in", username);
+            const now = Date.now(); // Current timestamp
+            const sessionData = {
+                username: username, // The logged-in username
+                loginTime: now, // When login occurred
+                rememberMe: rememberMe.checked // Whether "remember me" was checked
+            };
+            // Store session data in localStorage
+            localStorage.setItem("keysafe-logged-in", JSON.stringify(sessionData));
+           
+            // Add login activity to activity log
+            addActivity("Logged in to Key Safe");
         }
+       
+        // Retrieves currently logged-in user, checking session validity
         function getLoggedInUser() {
-            return localStorage.getItem("keysafe-logged-in");
+            const sessionData = localStorage.getItem("keysafe-logged-in");
+            if (!sessionData) return null; // No session exists
+           
+            try {
+                const data = JSON.parse(sessionData); // Parse session data
+                const now = Date.now(); // Current timestamp
+               
+                // Check if session has expired (unless remember me is checked)
+                if (!data.rememberMe && now - data.loginTime > SESSION_TIMEOUT) {
+                    clearLoggedInUser(); // Clear expired session
+                    return null; // Return null for no valid session
+                }
+               
+                return data.username; // Return valid username
+            } catch (e) {
+                // If there's an error parsing, clear the session
+                clearLoggedInUser();
+                return null;
+            }
         }
+       
+        // Clears the logged-in user session
         function clearLoggedInUser() {
-            localStorage.removeItem("keysafe-logged-in");
+            localStorage.removeItem("keysafe-logged-in"); // Remove session data
         }
 
-        
+        // ========== ACTIVITY TRACKING ==========
+        // Logs user activities for security/auditing
+       
+        function addActivity(action) {
+            // Get existing activity log or empty array
+            const activityLog = JSON.parse(localStorage.getItem("keysafe-activity") || "[]");
+            // Add new activity at beginning of array (most recent first)
+            activityLog.unshift({
+                action: action, // Description of activity
+                timestamp: Date.now() // When it occurred
+            });
+           
+            // Keep only last 10 activities to prevent storage bloat
+            if (activityLog.length > 10) {
+                activityLog.splice(10); // Remove older entries beyond 10
+            }
+           
+            // Save updated activity log
+            localStorage.setItem("keysafe-activity", JSON.stringify(activityLog));
+        }
+
+        // ========== LOGIN ATTEMPTS TRACKING ==========
+        // Functions to track and limit failed login attempts
+       
+        // Gets array of timestamps for recent login attempts
+        function getLoginAttempts() {
+            return JSON.parse(localStorage.getItem("keysafe-login-attempts") || "[]");
+        }
+       
+        // Saves login attempts array to localStorage
+        function setLoginAttempts(attempts) {
+            localStorage.setItem("keysafe-login-attempts", JSON.stringify(attempts));
+        }
+       
+        // Records a new login attempt and filters old ones
+        function addLoginAttempt() {
+            const now = Date.now(); // Current timestamp
+            const attempts = getLoginAttempts(); // Get existing attempts
+            attempts.push(now); // Add current attempt
+           
+            // Filter to keep only attempts from the last minute
+            const recentAttempts = attempts.filter(time => now - time < LOGIN_ATTEMPT_WINDOW);
+            setLoginAttempts(recentAttempts); // Save filtered attempts
+           
+            return recentAttempts.length; // Return count of recent attempts
+        }
+       
+        // Calculates remaining login attempts before lockout
+        function getRemainingAttempts() {
+            const attempts = getLoginAttempts(); // Get all attempts
+            const now = Date.now(); // Current timestamp
+            // Filter to attempts in the last minute
+            const recentAttempts = attempts.filter(time => now - time < LOGIN_ATTEMPT_WINDOW);
+            return MAX_LOGIN_ATTEMPTS - recentAttempts.length; // Calculate remaining
+        }
+       
+        // Checks if account is currently locked
+        function isAccountLocked() {
+            const attempts = getLoginAttempts(); // Get all attempts
+            const now = Date.now(); // Current timestamp
+            // Filter to attempts in the last minute
+            const recentAttempts = attempts.filter(time => now - time < LOGIN_ATTEMPT_WINDOW);
+            return recentAttempts.length >= MAX_LOGIN_ATTEMPTS; // Locked if at or above max
+        }
+       
+        // Calculates remaining lockout time in milliseconds
+        function getLockoutTimeRemaining() {
+            const attempts = getLoginAttempts(); // Get all attempts
+            if (attempts.length === 0) return 0; // No attempts, no lockout
+           
+            const oldestAttempt = Math.min(...attempts); // Find oldest attempt timestamp
+            const lockoutEndTime = oldestAttempt + LOGIN_ATTEMPT_WINDOW; // Calculate when lockout ends
+            const now = Date.now(); // Current timestamp
+           
+            return Math.max(0, lockoutEndTime - now); // Return remaining time, minimum 0
+        }
+
+        // ========== PASSWORD VISIBILITY TOGGLE ==========
+        // Toggles password field between text and password type
+       
+        function togglePasswordVisibility(inputId, toggleButton) {
+            const input = document.getElementById(inputId); // Get password input element
+            const icon = toggleButton.querySelector('i'); // Get eye icon element
+           
+            if (input.type === "password") {
+                input.type = "text"; // Show password as plain text
+                icon.classList.remove('fa-eye'); // Change from open eye
+                icon.classList.add('fa-eye-slash'); // To closed eye
+            } else {
+                input.type = "password"; // Hide password with dots
+                icon.classList.remove('fa-eye-slash'); // Change from closed eye
+                icon.classList.add('fa-eye'); // To open eye
+            }
+        }
+
+        // ========== EVENT LISTENERS FOR PASSWORD TOGGLES ==========
+        // Attaches click handlers to password visibility buttons
+       
+        loginPasswordToggle.addEventListener("click", () => {
+            togglePasswordVisibility("loginPassword", loginPasswordToggle);
+        });
+       
+        signupPasswordToggle.addEventListener("click", () => {
+            togglePasswordVisibility("signupPassword", signupPasswordToggle);
+        });
+       
+        signupPassword2Toggle.addEventListener("click", () => {
+            togglePasswordVisibility("signupPassword2", signupPassword2Toggle);
+        });
+
+        // ========== TAB SWITCHING LOGIC ==========
+        // Handles switching between login and signup tabs
+       
         loginTab.onclick = () => {
-            loginTab.classList.add("active");
-            signupTab.classList.remove("active");
-            loginFormDiv.style.display = "block";
-            signupFormDiv.style.display = "none";
-            dashboard.style.display = "none";
-            homePage.style.display = "none";
-            tabs.style.display = "flex";
-            loginFormDiv.querySelector('form').style.animation = "fade-in 0.5s";
+            loginTab.classList.add("active"); // Activate login tab visually
+            signupTab.classList.remove("active"); // Deactivate signup tab
+            loginFormDiv.style.display = "block"; // Show login form
+            signupFormDiv.style.display = "none"; // Hide signup form
+            loginFormDiv.querySelector('form').style.animation = "fade-in 0.5s"; // Add fade animation
+            updateLoginAttemptsDisplay(); // Update attempt counter display
         };
+       
         signupTab.onclick = () => {
-            signupTab.classList.add("active");
-            loginTab.classList.remove("active");
-            loginFormDiv.style.display = "none";
-            signupFormDiv.style.display = "block";
-            dashboard.style.display = "none";
-            homePage.style.display = "none";
-            tabs.style.display = "flex";
-            signupFormDiv.querySelector('form').style.animation = "fade-in 0.5s";
+            signupTab.classList.add("active"); // Activate signup tab visually
+            loginTab.classList.remove("active"); // Deactivate login tab
+            loginFormDiv.style.display = "none"; // Hide login form
+            signupFormDiv.style.display = "block"; // Show signup form
+            signupFormDiv.querySelector('form').style.animation = "fade-in 0.5s"; // Add fade animation
         };
 
-        
+        // ========== LOGIN ATTEMPTS DISPLAY UPDATER ==========
+        // Updates UI elements showing login attempt status
+       
+        function updateLoginAttemptsDisplay() {
+            const remainingAttempts = getRemainingAttempts(); // Calculate remaining attempts
+            const isLocked = isAccountLocked(); // Check if account is locked
+           
+            if (isLocked) {
+                const timeRemaining = Math.ceil(getLockoutTimeRemaining() / 1000); // Convert ms to seconds
+                lockoutMessage.textContent = `Account temporarily locked due to too many failed attempts. Please try again in ${timeRemaining} seconds.`;
+                attemptsWarning.textContent = ""; // Clear warning
+                loginBtn.disabled = true; // Disable login button
+            } else {
+                lockoutMessage.textContent = ""; // Clear lockout message
+                if (remainingAttempts < MAX_LOGIN_ATTEMPTS) {
+                    // Show warning if attempts have been used
+                    attemptsWarning.textContent = `You have ${remainingAttempts} login attempt${remainingAttempts !== 1 ? 's' : ''} remaining before temporary lockout.`;
+                } else {
+                    attemptsWarning.textContent = ""; // Clear if no attempts used
+                }
+                loginBtn.disabled = false; // Enable login button
+            }
+        }
+
+        // ========== LOGIN FORM SUBMISSION HANDLER ==========
+        // Handles login form submission and authentication
+       
         document.getElementById("loginForm").onsubmit = function(e) {
-            e.preventDefault();
-            document.getElementById("loginError").innerText = "";
+            e.preventDefault(); // Prevents default form submission (page reload)
+            document.getElementById("loginError").innerText = ""; // Clear previous errors
+           
+            // Check if account is locked before attempting login
+            if (isAccountLocked()) {
+                updateLoginAttemptsDisplay(); // Update display to show lockout
+                return; // Stop login attempt
+            }
+           
+            // Get form values
             const username = document.getElementById("loginUsername").value.trim();
             const password = document.getElementById("loginPassword").value;
-            const users = getUsers();
+            const users = getUsers(); // Get all registered users
+           
+            // Check if user exists and password matches
             if (users[username] && users[username].password === password) {
-                setLoggedInUser(username);
+                // Successful login
+                setLoginAttempts([]); // Clear all login attempts
+                setLoggedInUser(username); // Set session data
+               
+                // Redirect to main application page
                 window.location.href = "index.html";
             } else {
-                document.getElementById("loginError").innerText = "Invalid username or password";
+                // Failed login
+                const attemptsCount = addLoginAttempt(); // Record failed attempt
+                const remainingAttempts = getRemainingAttempts(); // Calculate remaining
+               
+                if (remainingAttempts <= 0) {
+                    // Account is now locked
+                    document.getElementById("loginError").innerText = "Too many failed login attempts. Your account has been temporarily locked for security reasons.";
+                } else {
+                    // Show remaining attempts
+                    document.getElementById("loginError").innerText =
+                        `Invalid username or password. You have ${remainingAttempts} attempt${remainingAttempts !== 1 ? 's' : ''} remaining before temporary lockout.`;
+                }
+               
+                updateLoginAttemptsDisplay(); // Update UI with new attempt count
             }
         };
 
+        // ========== SIGNUP FORM SUBMISSION HANDLER ==========
+        // Handles new user registration
+       
         document.getElementById("signupForm").onsubmit = function(e) {
-            e.preventDefault();
-            document.getElementById("signupError").innerText = "";
-            document.getElementById("signupSuccess").innerText = "";
+            e.preventDefault(); // Prevents default form submission
+            document.getElementById("signupError").innerText = ""; // Clear previous errors
+            document.getElementById("signupSuccess").innerText = ""; // Clear previous success
+           
+            // Get form values
             const username = document.getElementById("signupUsername").value.trim();
             const email = document.getElementById("signupEmail").value.trim();
             const password = document.getElementById("signupPassword").value;
             const password2 = document.getElementById("signupPassword2").value;
+           
+            // Password confirmation check
             if (password !== password2) {
-                document.getElementById("signupError").innerText = "Passwords do not match";
+                document.getElementById("signupError").innerText = "Passwords do not match. Please ensure both password fields are identical.";
                 return;
             }
+           
+            // Username validation with regex
             if (!/^[a-zA-Z0-9_.-]{3,}$/.test(username)) {
-                document.getElementById("signupError").innerText = "Username must be at least 3 characters, letters/numbers/._- only";
+                document.getElementById("signupError").innerText = "Username must be at least 3 characters long and can only contain letters, numbers, periods, underscores, or hyphens.";
                 return;
             }
+           
+            // Email validation with regex
             if (!/^\S+@\S+\.\S+$/.test(email)) {
-                document.getElementById("signupError").innerText = "Invalid email";
+                document.getElementById("signupError").innerText = "Please enter a valid email address (e.g., name@example.com).";
                 return;
             }
-            if (password.length < 4) {
-                document.getElementById("signupError").innerText = "Password must be at least 4 characters";
+           
+            // Password length validation
+            if (password.length < 6) {
+                document.getElementById("signupError").innerText = "Password must be at least 6 characters long for better security.";
                 return;
             }
+           
+            // Check if username already exists
             let users = getUsers();
             if (users[username]) {
-                document.getElementById("signupError").innerText = "Username already exists";
+                document.getElementById("signupError").innerText = "This username is already taken. Please choose a different one.";
                 return;
             }
+           
+            // Create new user account
             users[username] = {email, password};
-            setUsers(users);
-            document.getElementById("signupSuccess").innerText = "Signup successful! Please login.";
-            document.getElementById("signupForm").reset();
+            setUsers(users); // Save to localStorage
+           
+            // Show success message
+            document.getElementById("signupSuccess").innerText = "Account created successfully! You can now log in with your credentials.";
+            document.getElementById("signupForm").reset(); // Clear form
+           
+            // Switch to login tab after successful signup
+            setTimeout(() => {
+                loginTab.click(); // Programmatically click login tab
+            }, 1500); // Wait 1.5 seconds
         };
 
-        function showHomePage() {
-            loginFormDiv.style.display = "none";
-            signupFormDiv.style.display = "none";
-            dashboard.style.display = "none";
-            homePage.style.display = "block";
-            tabs.style.display = "none";
-            const username = getLoggedInUser();
-            homeUser.innerHTML = `<b>Welcome, ${username}!</b>`;
-        }
-
-        function showDashboard() {
-            const username = getLoggedInUser();
-            if (username) {
-                loginFormDiv.style.display = "none";
-                signupFormDiv.style.display = "none";
-                dashboard.style.display = "block";
-                homePage.style.display = "none";
-                tabs.style.display = "none";
-                dashboardUser.innerHTML = `<b>User:</b> ${username}`;
-                loginTab.classList.remove("active");
-                signupTab.classList.remove("active");
-            }
-        }
-
-        logoutBtn.onclick = function() {
-            clearLoggedInUser();
-            dashboard.style.display = "none";
-            homePage.style.display = "none";
-            loginTab.classList.add("active");
-            signupTab.classList.remove("active");
-            loginFormDiv.style.display = "block";
-            tabs.style.display = "flex";
-        };
-        logoutBtnHome.onclick = function() {
-            clearLoggedInUser();
-            dashboard.style.display = "none";
-            homePage.style.display = "none";
-            loginTab.classList.add("active");
-            signupTab.classList.remove("active");
-            loginFormDiv.style.display = "block";
-            tabs.style.display = "flex";
-        };
-
+        // ========== PAGE INITIALIZATION ==========
+        // Runs when page loads to set up initial state
+       
         (function() {
+            // Immediately-invoked function expression (IIFE) for initialization
+           
+            // Check if user is already logged in with a VALID session
             const username = getLoggedInUser();
             if (username) {
-                showHomePage();
+                // Only redirect if we're not already on the home page
+                if (!window.location.href.includes('index.html')) {
+                    window.location.href = "index.html"; // Redirect to main app
+                }
+                return; // Stop further initialization
+            }
+           
+            updateLoginAttemptsDisplay(); // Update login attempt warnings
+           
+            // Check for remembered login to pre-fill "remember me" checkbox
+            const sessionData = localStorage.getItem("keysafe-logged-in");
+            if (sessionData) {
+                try {
+                    const data = JSON.parse(sessionData);
+                    if (data.rememberMe) {
+                        rememberMe.checked = true; // Check "remember me" if previously checked
+                        sessionInfo.textContent = `Last login: ${new Date(data.loginTime).toLocaleDateString()}`; // Show last login date
+                    }
+                } catch (e) {
+                    // Ignore parsing errors silently
+                }
             }
         })();
     </script>
 </body>
 </html>
-
-<!--
-    NOTES:
-    - Checks if the user is already logged in
-    - CSS tab switching
-    - Validates Inputs
-    - UI Updates based on login success or failure
--->

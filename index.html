@@ -1,477 +1,1240 @@
+<!-- HTML5 document declaration -->
 <!DOCTYPE html>
+<!-- Root element with English language setting -->
 <html lang="en">
 <head>
+    <!-- Character encoding for proper text display -->
     <meta charset="UTF-8">
+    <!-- Page title shown in browser tab -->
     <title>Key Safe Home</title>
+    <!-- Responsive viewport setting for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Fonts link for Inter font family -->
     <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Internal CSS styles -->
     <style>
+        /* CSS custom properties (variables) for consistent theming */
         :root {
-            --background: #232326;
-            --card-bg: #3a3a3e;
-            --primary: #2d8cff;
-            --primary-hover: #2063bb;
-            --text: #fff;
-            --muted: #b0b6c4;
-            --button-bg: #3a3a3e;
-            --button-hover: #232326;
-            --button-text: #fff;
-            --bar-bg: #3a3a3e;
-            --menu-bg: #3a3a3e;
-            --menu-link-bg: #232326;
-            --menu-link-text: #fff;
-            --menu-border: #44444b;
-            --menu-fade: 0.35s cubic-bezier(.55,.06,.68,.19);
-            --logout-bg: #232326;
-            --logout-hover-bg: #ff5757;
+            --background: #0f172a;          /* Dark blue background color */
+            --container-bg: #1e293b;        /* Container background color */
+            --primary: #3b82f6;             /* Primary blue color */
+            --primary-hover: #2563eb;       /* Darker blue for hover states */
+            --text: #f8fafc;                /* Light text color */
+            --muted: #94a3b8;               /* Muted gray text color */
+            --input-bg: #334155;            /* Input field background */
+            --input-border: #475569;        /* Input border color */
+            --error: #ef4444;               /* Red for error messages */
+            --success: #10b981;             /* Green for success messages */
+            --warning: #f59e0b;             /* Yellow/orange for warnings */
+            --tab-inactive: #1e293b;        /* Inactive tab background */
+            --tab-active: #3b82f6;          /* Active tab color */
+            --box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* Shadow for depth */
+            --gradient: linear-gradient(135deg, #3b82f6, #8b5cf6); /* Blue to purple gradient */
+            --danger: #ef4444;              /* Danger/error color */
         }
-        body {
+       
+        /* Universal reset: removes default margins and paddings, uses border-box sizing */
+        * {
             margin: 0;
             padding: 0;
-            background: var(--background);
-            color: var(--text);
-            font-family: 'Inter', Arial, sans-serif;
-            min-height: 100vh;
+            box-sizing: border-box; /* Includes padding and border in element's total width/height */
         }
+       
+        /* Body styling */
+        body {
+            background: var(--background); /* Dark background from variable */
+            color: var(--text);            /* Light text color */
+            font-family: 'Inter', Arial, sans-serif; /* Font stack */
+            min-height: 100vh;             /* Minimum full viewport height */
+            line-height: 1.6;              /* Improves readability with spacing between lines */
+        }
+       
+        /* Top navigation bar - fixed at top of screen */
         .top-bar {
-            width: 100%;
-            height: 60px;
-            background: var(--bar-bg);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 30px;
-            box-sizing: border-box;
-            position: fixed;
+            width: 100%;                   /* Full width */
+            height: 70px;                  /* Fixed height */
+            background: var(--container-bg); /* Background color */
+            display: flex;                 /* Flexbox for horizontal layout */
+            align-items: center;           /* Vertically centers content */
+            justify-content: space-between; /* Space between left and right sections */
+            padding: 0 30px;               /* Horizontal padding */
+            box-sizing: border-box;        /* Include padding in width calculation */
+            position: fixed;               /* Sticks to top of viewport */
             top: 0;
             left: 0;
-            z-index: 100;
+            z-index: 100;                  /* High z-index to stay above other content */
+            box-shadow: 0 2px 20px rgba(0,0,0,0.2); /* Subtle shadow for depth */
+            animation: slideDown 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Entrance animation */
         }
+       
+        /* Keyframes for sliding down animation */
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%); /* Starts above viewport */
+                opacity: 0;                    /* Invisible */
+            }
+            to {
+                transform: translateY(0);      /* Ends at normal position */
+                opacity: 1;                    /* Fully visible */
+            }
+        }
+       
+        /* Left section of top bar */
         .bar-left {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: var(--text);
+            font-size: 1.3rem;            /* Slightly larger text */
+            font-weight: bold;            /* Bold text */
+            color: var(--text);           /* Light text color */
+            display: flex;                /* Flexbox for horizontal layout */
+            align-items: center;          /* Vertically centers items */
+            gap: 15px;                    /* Space between elements */
         }
+       
+        /* Session timer display */
+        .session-timer {
+            font-size: 0.85rem;           /* Smaller text */
+            color: var(--muted);          /* Muted color */
+            background: var(--input-bg);  /* Background color */
+            padding: 4px 10px;            /* Internal spacing */
+            border-radius: 20px;          /* Rounded pill shape */
+            font-weight: 500;             /* Medium weight */
+        }
+       
+        /* Warning state for session timer */
+        .session-timer.warning {
+            color: var(--warning);                       /* Yellow text */
+            background: rgba(245, 158, 11, 0.1);         /* Light yellow background */
+        }
+       
+        /* Danger state for session timer */
+        .session-timer.danger {
+            color: var(--danger);                        /* Red text */
+            background: rgba(239, 68, 68, 0.1);          /* Light red background */
+        }
+       
+        /* Hamburger menu button for mobile navigation */
         .bar-menu {
-            width: 32px;
-            height: 32px;
-            display: flex;
+            width: 44px;                  /* Fixed width */
+            height: 44px;                 /* Fixed height (square) */
+            display: flex;                /* Centers icon */
             align-items: center;
-            justify-content: flex-end;
-            cursor: pointer;
-            position: relative;
-            z-index: 101;
-            background: none;
-            border: none;
-        }
-        .bar-menu-bars, .bar-menu-x {
-            width: 28px;
-            height: 28px;
-            display: flex;
-            flex-direction: column;
             justify-content: center;
-            align-items: center;
+            cursor: pointer;              /* Indicates clickable */
+            position: relative;           /* For positioning children */
+            z-index: 101;                 /* Above other elements */
+            background: var(--input-bg);  /* Background color */
+            border: none;                 /* No border */
+            border-radius: 12px;          /* Rounded corners */
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Smooth animation */
+        }
+       
+        /* Hamburger menu hover effect */
+        .bar-menu:hover {
+            background: var(--primary);   /* Changes to primary color */
+            transform: scale(1.05);       /* Slightly enlarges */
+        }
+       
+        /* Container for the three lines of hamburger menu */
+        .bar-menu-bars {
+            width: 24px;                  /* Width of hamburger icon */
+            height: 18px;                 /* Height of hamburger icon */
+            display: flex;                /* Flexbox for stacking lines */
+            flex-direction: column;       /* Vertical stack of lines */
+            justify-content: space-between; /* Even spacing between lines */
             position: relative;
+            transition: all 0.3s ease;    /* Smooth transition */
         }
+       
+        /* Individual lines of hamburger menu */
         .bar-menu-bars span {
-            display: block;
-            height: 4px;
-            width: 100%;
-            background: #fff;
-            margin: 3.5px 0;
-            border-radius: 2px;
-            transition: background 0.3s;
+            display: block;               /* Makes spans behave like block elements */
+            height: 3px;                  /* Thickness of lines */
+            width: 100%;                  /* Full width of container */
+            background: var(--text);      /* Light color */
+            border-radius: 2px;           /* Slightly rounded ends */
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Smooth animation */
+            transform-origin: center;     /* Rotation happens from center */
         }
+       
+        /* Changes hamburger lines to white on hover */
+        .bar-menu:hover .bar-menu-bars span {
+            background: white;
+        }
+       
+        /* Close button (X) for menu overlay */
         .bar-menu-x {
-            position: absolute;
+            position: absolute;           /* Positioned relative to overlay */
             top: 0;
             right: 0;
-            width: 32px;
-            height: 32px;
-            display: none;
-            justify-content: center;
+            width: 44px;                  /* Same size as hamburger */
+            height: 44px;
+            display: none;                /* Hidden by default */
+            justify-content: center;      /* Centers X icon */
             align-items: center;
-            cursor: pointer;
-            background: none;
+            cursor: pointer;              /* Clickable */
+            background: var(--input-bg);  /* Background color */
+            border-radius: 12px;          /* Rounded corners */
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Smooth animation */
         }
+       
+        /* Close button hover effect */
+        .bar-menu-x:hover {
+            background: var(--primary);   /* Changes to primary color */
+            transform: scale(1.05);       /* Slightly enlarges */
+        }
+       
+        /* Lines that form the X shape */
         .bar-menu-x span {
-            position: absolute;
-            width: 24px;
-            height: 4px;
-            top: 50%;
-            left: 50%;
-            background: #fff;
-            border-radius: 2px;
-            transition:
-                transform 0.35s cubic-bezier(.55,.06,.68,.19),
-                opacity 0.18s,
-                background 0.2s;
+            position: absolute;           /* Positioned within container */
+            width: 20px;                  /* Length of X lines */
+            height: 3px;                  /* Thickness of X lines */
+            background: var(--text);      /* Light color */
+            border-radius: 2px;           /* Slightly rounded ends */
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Smooth animation */
         }
+       
+        /* First line of X (rotated 45 degrees) */
         .bar-menu-x .x1 {
-            transform: translate(-50%, -50%) rotate(45deg);
+            transform: rotate(45deg);     /* Diagonal line */
         }
+       
+        /* Second line of X (rotated -45 degrees) */
         .bar-menu-x .x2 {
-            transform: translate(-50%, -50%) rotate(-45deg);
+            transform: rotate(-45deg);    /* Opposite diagonal line */
+        }
+       
+        /* Changes X lines to white on hover */
+        .bar-menu-x:hover span {
+            background: white;
         }
 
+        /* Shows close button when menu overlay is active */
         .menu-overlay .bar-menu-x {
-            display: flex !important;
-            position: absolute;
-            top: 30px;
-            right: 30px;
-            z-index: 201;
-            background: none;
+            display: flex !important;     /* Forces display (overrides default) */
+            position: absolute;           /* Positioned in corner */
+            top: 30px;                    /* From top */
+            right: 30px;                  /* From right */
+            z-index: 201;                 /* Above overlay content */
         }
-        .menu-overlay .bar-menu-x:hover span {
-            background: var(--primary);
-        }
+       
+        /* Full-screen menu overlay */
         .menu-overlay {
-            position: fixed;
+            position: fixed;              /* Covers entire viewport */
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: var(--menu-bg);
-            color: #fff;
-            z-index: 200;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity var(--menu-fade);
+            width: 100vw;                 /* Full viewport width */
+            height: 100vh;                /* Full viewport height */
+            background: var(--container-bg); /* Background color */
+            color: #fff;                  /* White text */
+            z-index: 200;                 /* Above all other content */
+            display: none;                /* Hidden by default */
+            flex-direction: column;       /* Vertical layout */
+            align-items: center;          /* Centers horizontally */
+            justify-content: center;      /* Centers vertically */
+            opacity: 0;                   /* Invisible by default */
+            pointer-events: none;         /* Can't be interacted with */
+            transition: opacity 0.35s;    /* Fade transition */
         }
+       
+        /* Active state for menu overlay */
         .menu-overlay.active {
-            display: flex;
-            pointer-events: all;
-            opacity: 1;
-            animation: fadeInMenu 0.4s;
+            display: flex;                /* Shows overlay */
+            pointer-events: all;          /* Can be interacted with */
+            opacity: 1;                   /* Fully visible */
+            animation: fadeInZoom 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Entrance animation */
         }
+       
+        /* Closing animation state */
         .menu-overlay.closing {
-            opacity: 0;
-            pointer-events: none;
-            animation: fadeOutMenu 0.35s cubic-bezier(.55,.06,.68,.19);
+            opacity: 0;                   /* Fades out */
+            pointer-events: none;         /* Can't be interacted with */
+            animation: fadeOut 0.35s cubic-bezier(.55,.06,.68,.19); /* Exit animation */
         }
-        @keyframes fadeInMenu {
-            from { opacity: 0;}
-            to { opacity: 1;}
+       
+        /* Fade in with zoom animation */
+        @keyframes fadeInZoom {
+            from {
+                opacity: 0;               /* Starts invisible */
+                transform: scale(0.95);   /* Starts slightly smaller */
+            }
+            to {
+                opacity: 1;               /* Ends fully visible */
+                transform: scale(1);      /* Ends at normal size */
+            }
         }
-        @keyframes fadeOutMenu {
-            from { opacity: 1;}
-            to { opacity: 0;}
+       
+        /* Simple fade out animation */
+        @keyframes fadeOut {
+            from { opacity: 1; }          /* Starts visible */
+            to { opacity: 0; }            /* Ends invisible */
         }
+       
+        /* Container for menu items */
         .menu-list {
-            width: 90%;
-            max-width: 350px;
-            display: flex;
-            flex-direction: column;
-            gap: 22px;
+            width: 90%;                   /* 90% of parent width */
+            max-width: 400px;             /* Maximum width */
+            display: flex;                /* Flexbox layout */
+            flex-direction: column;       /* Vertical stack */
+            gap: 16px;                    /* Space between items */
         }
+       
+        /* Card container for each menu item */
         .menu-item-card {
-            background: var(--menu-link-bg);
-            color: var(--menu-link-text);
-            border-radius: 12px;
-            padding: 0;
-            box-shadow: 0 4px 14px #0003;
-            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-            cursor: pointer;
-            border: none;
-            outline: none;
+            background: var(--input-bg);  /* Background color */
+            color: var(--text);           /* Text color */
+            border-radius: 16px;          /* Rounded corners */
+            padding: 0;                   /* No padding (handled by child) */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2); /* Shadow for depth */
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Smooth animation */
+            cursor: pointer;              /* Indicates clickable */
+            border: none;                 /* No border by default */
+            outline: none;                /* Removes focus outline */
+            overflow: hidden;             /* Contains child elements */
+            border: 2px solid transparent; /* Transparent border for hover effect */
         }
+       
+        /* Actual menu item content */
         .menu-item {
-            font-size: 1.3rem;
-            padding: 24px 0;
-            text-align: center;
-            color: var(--menu-link-text);
-            border: none;
-            border-radius: 12px;
-            background: none;
-            transition: color 0.2s;
-            font-family: 'Inter', Arial, sans-serif;
+            font-size: 1.1rem;            /* Slightly larger text */
+            padding: 20px 0;              /* Vertical padding */
+            text-align: center;           /* Centers text */
+            color: var(--text);           /* Light text color */
+            border: none;                 /* No border */
+            border-radius: 16px;          /* Rounded corners */
+            background: none;             /* No background (uses parent's) */
+            transition: all 0.3s;         /* Smooth transition */
+            font-family: 'Inter', Arial, sans-serif; /* Consistent font */
+            font-weight: 600;             /* Semi-bold */
+            display: flex;                /* Flexbox for icon + text */
+            align-items: center;          /* Vertically centers */
+            justify-content: center;      /* Horizontally centers */
+            gap: 12px;                    /* Space between icon and text */
         }
+       
+        /* Hover effect for menu item cards */
         .menu-item-card:hover {
-            box-shadow: 0 4px 20px #2d8cff55, 0 2px 8px #0005;
+            transform: translateY(-5px) scale(1.02); /* Lifts and slightly enlarges */
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.3); /* Blue-tinted shadow */
+            border-color: var(--primary); /* Blue border */
         }
+       
+        /* Hover effect for menu item text */
         .menu-item:hover {
-            color: var(--primary);
-            background: none;
+            color: var(--primary);        /* Changes to blue */
         }
 
+        /* Special styling for logout menu item card */
         .menu-item-card.logout {
-            background: var(--logout-bg) !important;
-            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            background: var(--input-bg);  /* Standard background */
+            margin-top: 10px;             /* Extra space above */
         }
+       
+        /* Logout menu item text */
         .menu-item-card.logout .menu-item {
-            color: #fff !important;
+            color: #fff;                  /* White text */
         }
+       
+        /* Hover effect for logout button */
         .menu-item-card.logout:hover {
-            background: var(--logout-hover-bg) !important;
-            box-shadow: 0 4px 20px #ff575733, 0 2px 8px #0005;
+            background: var(--danger);    /* Changes to red */
+            border-color: var(--danger);  /* Red border */
+            box-shadow: 0 8px 30px rgba(239, 68, 68, 0.3); /* Red-tinted shadow */
         }
 
+        /* Main content area (below fixed top bar) */
         .main-content {
-            background: var(--background);
-            padding-top: 60px;
-            min-height: 100vh;
-            min-height: 100svh;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            width: 100vw;
-            box-sizing: border-box;
+            background: var(--background); /* Dark background */
+            padding-top: 90px;            /* Space for fixed top bar */
+            min-height: 100vh;            /* At least full viewport height */
+            min-height: 100svh;           /* Better mobile support */
+            display: flex;                /* Flexbox layout */
+            flex-direction: column;       /* Vertical stack */
+            align-items: center;          /* Centers horizontally */
+            width: 100%;                  /* Full width */
+            box-sizing: border-box;       /* Includes padding in width */
+            padding-bottom: 30px;         /* Bottom padding */
+            animation: fadeInUp 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Entrance animation */
         }
+       
+        /* Fade in from bottom animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;               /* Starts invisible */
+                transform: translateY(30px); /* Starts lower */
+            }
+            to {
+                opacity: 1;               /* Ends fully visible */
+                transform: translateY(0); /* Ends at normal position */
+            }
+        }
+       
+        /* Dashboard container */
+        .dashboard {
+            width: 90%;                   /* 90% of parent width */
+            max-width: 1200px;            /* Maximum width */
+            display: flex;                /* Flexbox layout */
+            flex-direction: column;       /* Vertical stack */
+            gap: 25px;                    /* Space between sections */
+        }
+       
+        /* Individual dashboard section */
+        .dashboard-section {
+            background: var(--container-bg); /* Background color */
+            border-radius: 16px;          /* Rounded corners */
+            padding: 25px;                /* Internal spacing */
+            box-shadow: var(--box-shadow); /* Shadow for depth */
+            animation: fadeInUp 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) both; /* Staggered entrance */
+        }
+       
+        /* Staggered animation delays for visual interest */
+        .dashboard-section:nth-child(1) { animation-delay: 0.1s; } /* First section */
+        .dashboard-section:nth-child(2) { animation-delay: 0.2s; } /* Second section */
+        .dashboard-section:nth-child(3) { animation-delay: 0.3s; } /* Third section */
+       
+        /* Section title styling */
+        .section-title {
+            font-size: 1.4rem;            /* Larger text for headings */
+            font-weight: 700;             /* Bold weight */
+            margin-bottom: 20px;          /* Space below title */
+            color: var(--text);           /* Light text color */
+            display: flex;                /* Flexbox for icon + text */
+            align-items: center;          /* Vertically aligns */
+            gap: 10px;                    /* Space between icon and text */
+        }
+       
+        /* Icon color in section titles */
+        .section-title i {
+            color: var(--primary);        /* Blue icons */
+        }
+       
+        /* Grid layout for big action buttons */
         .big-buttons {
-            display: flex;
-            flex-direction: column;
-            margin: 0;
-            padding: 32px 0;
-            width: 100%;
-            gap: 22px;
-            box-sizing: border-box;
+            display: grid;                /* CSS Grid for layout */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive columns */
+            gap: 20px;                    /* Space between buttons */
+            margin: 0;                    /* No margin */
+            width: 100%;                  /* Full width */
         }
+       
+        /* Large action buttons */
         .big-btn {
-            background: var(--button-bg);
-            color: var(--button-text);
-            border: none;
-            border-radius: 18px;
-            width: calc(100vw - 48px);
-            min-width: 0;
-            min-height: 110px;
-            font-size: 2rem;
-            font-weight: bold;
-            margin: 0 auto;
-            cursor: pointer;
-            box-shadow: none;
-            transition: background 0.2s, color 0.2s;
-            display: flex;
+            background: var(--input-bg);  /* Background color */
+            color: var(--text);           /* Text color */
+            border: none;                 /* No border */
+            border-radius: 16px;          /* Rounded corners */
+            height: 120px;                /* Fixed height */
+            font-size: 1.3rem;            /* Larger text */
+            font-weight: 600;             /* Semi-bold */
+            cursor: pointer;              /* Indicates clickable */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* Shadow for depth */
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Smooth animation */
+            display: flex;                /* Flexbox for icon + text */
+            flex-direction: column;       /* Vertical stack */
+            align-items: center;          /* Centers horizontally */
+            justify-content: center;      /* Centers vertically */
+            font-family: 'Inter', Arial, sans-serif; /* Consistent font */
+            text-decoration: none;        /* Removes underline from links */
+            gap: 8px;                     /* Space between icon and text */
+            position: relative;           /* For pseudo-element positioning */
+            overflow: hidden;             /* Contains pseudo-element */
+        }
+       
+        /* Colored top border for buttons */
+        .big-btn::before {
+            content: '';                  /* Empty content */
+            position: absolute;           /* Positioned relative to button */
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;                  /* Thin border */
+            background: var(--gradient);  /* Gradient color */
+        }
+       
+        /* Hover effect for big buttons */
+        .big-btn:hover {
+            transform: translateY(-5px);  /* Lifts button */
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3); /* Blue-tinted shadow */
+            background: var(--input-border); /* Slightly lighter background */
+        }
+       
+        /* Icon styling in big buttons */
+        .big-btn i {
+            font-size: 1.8rem;            /* Larger icons */
+            color: var(--primary);        /* Blue color */
+        }
+       
+        /* Grid layout for password health cards */
+        .health-overview {
+            display: grid;                /* CSS Grid for layout */
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive columns */
+            gap: 20px;                    /* Space between cards */
+        }
+       
+        /* Individual health metric card */
+        .health-card {
+            background: var(--input-bg);  /* Background color */
+            border-radius: 12px;          /* Rounded corners */
+            padding: 20px;                /* Internal spacing */
+            text-align: center;           /* Centers content */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Subtle shadow */
+            transition: transform 0.3s;   /* Lift animation */
+        }
+       
+        /* Hover effect for health cards */
+        .health-card:hover {
+            transform: translateY(-5px);  /* Lifts card slightly */
+        }
+       
+        /* Large number display for health metrics */
+        .health-value {
+            font-size: 2.5rem;            /* Very large text */
+            font-weight: 700;             /* Bold weight */
+            margin: 10px 0;               /* Vertical spacing */
+        }
+       
+        /* Color classes for different health states */
+        .health-good { color: var(--success); } /* Green for good */
+        .health-fair { color: var(--warning); } /* Yellow for fair */
+        .health-poor { color: var(--danger); }  /* Red for poor */
+       
+        /* Label for health metrics */
+        .health-label {
+            font-size: 0.9rem;            /* Smaller text */
+            color: var(--muted);          /* Muted color */
+        }
+       
+        /* Container for activity list */
+        .activity-list {
+            display: flex;                /* Flexbox layout */
+            flex-direction: column;       /* Vertical stack */
+            gap: 15px;                    /* Space between items */
+            max-height: 300px;            /* Maximum height */
+            overflow-y: auto;             /* Vertical scroll if needed */
+        }
+       
+        /* Individual activity item */
+        .activity-item {
+            display: flex;                /* Flexbox for icon + details */
+            align-items: center;          /* Vertically centers */
+            gap: 15px;                    /* Space between elements */
+            padding: 15px;                /* Internal spacing */
+            background: var(--input-bg);  /* Background color */
+            border-radius: 10px;          /* Rounded corners */
+            transition: background 0.3s;  /* Hover animation */
+        }
+       
+        /* Hover effect for activity items */
+        .activity-item:hover {
+            background: var(--input-border); /* Slightly lighter background */
+        }
+       
+        /* Circular icon container for activities */
+        .activity-icon {
+            width: 40px;                  /* Fixed width */
+            height: 40px;                 /* Fixed height (makes circle) */
+            border-radius: 50%;           /* Perfect circle */
+            background: var(--primary);   /* Blue background */
+            display: flex;                /* Centers icon */
             align-items: center;
             justify-content: center;
-            font-family: 'Inter', Arial, sans-serif;
-            text-decoration: none;
+            color: white;                 /* White icon */
         }
-        .big-btn:hover {
-            background: var(--button-hover);
-            color: #fff;
+       
+        /* Container for activity text details */
+        .activity-details {
+            flex: 1;                      /* Takes remaining space */
+        }
+       
+        /* Activity description text */
+        .activity-action {
+            font-weight: 600;             /* Semi-bold */
+            margin-bottom: 5px;           /* Space below */
+        }
+       
+        /* Timestamp for activities */
+        .activity-time {
+            font-size: 0.85rem;           /* Smaller text */
+            color: var(--muted);          /* Muted color */
+        }
+       
+        /* Empty state styling (when no data) */
+        .empty-state {
+            text-align: center;           /* Centers content */
+            padding: 30px;                /* Internal spacing */
+            color: var(--muted);          /* Muted color */
+        }
+       
+        /* Icon for empty state */
+        .empty-state i {
+            font-size: 3rem;              /* Large icon */
+            margin-bottom: 15px;          /* Space below icon */
+            opacity: 0.5;                 /* Semi-transparent */
         }
 
-        @media (max-width: 600px) {
-            .main-content, .big-btn {
-                width: 100vw;
-                min-width: 0;
-            }
-            .big-btn {
-                min-height: 80px;
-                font-size: 1.15rem;
-                width: calc(100vw - 20px);
-            }
-            .menu-list {
-                max-width: 95vw;
-            }
+        /* Media query for tablets and smaller screens */
+        @media (max-width: 768px) {
             .top-bar {
-                padding: 0 12px;
+                padding: 0 20px;          /* Less horizontal padding */
+                height: 60px;             /* Slightly shorter */
             }
+           
+            .bar-left {
+                font-size: 1.1rem;        /* Smaller text */
+            }
+           
+            .session-timer {
+                font-size: 0.75rem;       /* Smaller text */
+                padding: 3px 8px;         /* Less padding */
+            }
+           
+            .bar-menu {
+                width: 40px;              /* Smaller button */
+                height: 40px;
+            }
+           
+            .main-content {
+                padding-top: 80px;        /* Less top padding */
+            }
+           
+            .dashboard {
+                width: 95%;               /* Slightly wider */
+            }
+           
+            .dashboard-section {
+                padding: 20px;            /* Less padding */
+            }
+           
             .big-buttons {
-                padding: 18px 0;
-                gap: 14px;
+                grid-template-columns: 1fr; /* Single column layout */
             }
+           
+            .big-btn {
+                height: 100px;            /* Slightly shorter */
+                font-size: 1.1rem;        /* Smaller text */
+            }
+           
+            .health-overview {
+                grid-template-columns: 1fr 1fr; /* Two columns */
+            }
+           
             .menu-overlay .bar-menu-x {
-                top: 16px;
-                right: 16px;
+                top: 20px;                /* Closer to edge */
+                right: 20px;
             }
         }
-
-        /* Fade in on load */
-        @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(32px) scale(0.96);}
-        to   { opacity: 1; transform: translateY(0) scale(1);}
-        }
-
-        /* Fade in with slight zoom */
-        @keyframes fadeInZoom {
-        from { opacity: 0; transform: scale(0.95);}
-        to   { opacity: 1; transform: scale(1);}
-        }
-
-        /* Fade out */
-        @keyframes fadeOut {
-        from { opacity: 1;}
-        to   { opacity: 0;}
-        }
-
-        /* Subtle scale on hover (for cards/buttons) */
-        .card, .menu-item-card, .generate-btn, .alternate-password, .back-btn {
-        transition: transform 0.22s cubic-bezier(.55,.06,.68,.19), box-shadow 0.22s;
-        }
-        .card:hover, .menu-item-card:hover, .generate-btn:hover, .alternate-password:hover, .back-btn:hover {
-        transform: scale(1.04);
-        box-shadow: 0 8px 32px #2d8cff33, 0 2px 12px #0003;
-        }
-
-        /* Menu overlay fade in/out */
-        .menu-overlay {
-        animation: fadeInZoom 0.5s cubic-bezier(.55,.06,.68,.19);
-        }
-        .menu-overlay.closing {
-        animation: fadeOut 0.32s cubic-bezier(.55,.06,.68,.19);
-        }
-
-        /* Fade in for password outputs, suggestions, faq cards */
-        .password-output, .suggestion, .faq-card, .alternate-password {
-        animation: fadeInUp 0.6s cubic-bezier(.55,.06,.68,.19);
-        }
-
-        /* Fade-in stagger for multiple items (use inline style or nth-child) */
-        .faq-card:nth-child(1) { animation-delay: 0.04s; }
-        .faq-card:nth-child(2) { animation-delay: 0.08s; }
-        .faq-card:nth-child(3) { animation-delay: 0.12s; }
-        /* ... add more for more items */
-
-        /* Animated strength bar fill */
-        .strength-bar {
-        transition: width 0.33s cubic-bezier(.55,.06,.68,.19), background 0.2s;
-        }
-
-        /* Animate top-bar in */
-        .top-bar {
-        animation: fadeInZoom 0.5s cubic-bezier(.55,.06,.68,.19);
-        }
-
-        /* Button press effect */
-        .generate-btn:active, .back-btn:active {
-        transform: scale(0.97);
-        }
-
-        /* Copied badge fade in/out */
-        .copied-badge {
-        animation: fadeInZoom 0.3s;
+       
+        /* Media query for mobile phones */
+        @media (max-width: 480px) {
+            .top-bar {
+                padding: 0 15px;          /* Even less padding */
+            }
+           
+            .dashboard-section {
+                padding: 15px;            /* Less padding */
+            }
+           
+            .health-overview {
+                grid-template-columns: 1fr; /* Single column */
+            }
+           
+            .section-title {
+                font-size: 1.2rem;        /* Smaller text */
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Fixed top navigation bar -->
     <div class="top-bar">
-        <div class="bar-left" id="barLeft">Welcome</div>
+        <div class="bar-left">
+            <!-- Will display "Welcome, [username]" -->
+            <span id="barLeft">Welcome</span>
+            <!-- Session timer display -->
+            <div class="session-timer" id="sessionTimer">Session: --</div>
+        </div>
+        <!-- Hamburger menu button -->
         <button class="bar-menu" id="barMenuBtn" title="Open menu" aria-label="Menu">
-            <div class="bar-menu-bars" id="menuBars" style="display:flex">
+            <div class="bar-menu-bars" id="menuBars">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
         </button>
     </div>
+   
+    <!-- Full-screen menu overlay (hidden by default) -->
     <div class="menu-overlay" id="menuOverlay">
-        <div class="bar-menu-x" id="menuX" style="display:flex">
+        <!-- Close button (X) -->
+        <div class="bar-menu-x" id="menuX">
             <span class="x1"></span>
             <span class="x2"></span>
         </div>
+        <!-- Menu items container -->
         <div class="menu-list">
-            <div class="menu-item-card"><div class="menu-item" id="menuPasswordMaker">Password Maker</div></div>
-            <div class="menu-item-card"><div class="menu-item" id="menuPasswordChecker">Password Security Checker</div></div>
-            <div class="menu-item-card"><div class="menu-item" id="menuSavedPasswords">Saved Passwords</div></div>
-            <div class="menu-item-card"><div class="menu-item" id="menuFAQ">FAQ</div></div>
-            <div class="menu-item-card"><div class="menu-item" id="menuAbout">About</div></div>
-            <div class="menu-item-card logout"><div class="menu-item" id="menuLogout">Log Out</div></div>
+            <!-- Password Maker menu item -->
+            <div class="menu-item-card"><div class="menu-item" id="menuPasswordMaker"><i class="fas fa-key"></i> Password Maker</div></div>
+            <!-- Password Checker menu item -->
+            <div class="menu-item-card"><div class="menu-item" id="menuPasswordChecker"><i class="fas fa-shield-alt"></i> Password Security Checker</div></div>
+            <!-- Saved Passwords menu item -->
+            <div class="menu-item-card"><div class="menu-item" id="menuSavedPasswords"><i class="fas fa-save"></i> Saved Passwords</div></div>
+            <!-- FAQ menu item -->
+            <div class="menu-item-card"><div class="menu-item" id="menuFAQ"><i class="fas fa-question-circle"></i> FAQ</div></div>
+            <!-- About menu item (opens external link) -->
+            <div class="menu-item-card"><div class="menu-item" id="menuAbout"><i class="fas fa-info-circle"></i> About</div></div>
+            <!-- Logout menu item (red on hover) -->
+            <div class="menu-item-card logout"><div class="menu-item" id="menuLogout"><i class="fas fa-sign-out-alt"></i> Log Out</div></div>
         </div>
     </div>
+   
+    <!-- Main content area (dashboard) -->
     <div class="main-content">
-        <div class="big-buttons">
-            <a class="big-btn" id="btnPasswordMaker" href="password_maker.html">Password Maker</a>
-            <a class="big-btn" id="btnPasswordChecker" href="password_checker.html">Password Security Checker</a>
-            <a class="big-btn" id="btnSavedPasswords" href="password_saved.html">Saved Passwords</a>
+        <div class="dashboard">
+            <!-- Quick Actions section -->
+            <div class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-tachometer-alt"></i> Quick Actions</h2>
+                <div class="big-buttons">
+                    <!-- Password Maker button -->
+                    <a class="big-btn" id="btnPasswordMaker" href="password_maker.html">
+                        <i class="fas fa-key"></i>
+                        Password Maker
+                    </a>
+                    <!-- Password Checker button -->
+                    <a class="big-btn" id="btnPasswordChecker" href="password_checker.html">
+                        <i class="fas fa-shield-alt"></i>
+                        Password Security Checker
+                    </a>
+                    <!-- Saved Passwords button -->
+                    <a class="big-btn" id="btnSavedPasswords" href="password_saved.html">
+                        <i class="fas fa-save"></i>
+                        Saved Passwords
+                    </a>
+                </div>
+            </div>
+           
+            <!-- Password Health Overview section -->
+            <div class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-heartbeat"></i> Password Health Overview</h2>
+                <!-- Will be populated with health metrics by JavaScript -->
+                <div class="health-overview" id="healthOverview">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+           
+            <!-- Recent Activity section -->
+            <div class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-history"></i> Recent Activity</h2>
+                <!-- Will be populated with activity log by JavaScript -->
+                <div class="activity-list" id="activityList">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
         </div>
     </div>
+   
+    <!-- JavaScript code for page functionality -->
     <script>
+        // ========== SESSION MANAGEMENT FUNCTIONS ==========
+       
+        // Retrieves the currently logged-in user's session data
         function getLoggedInUser() {
-            return localStorage.getItem("keysafe-logged-in");
+            // Get session data from localStorage
+            const sessionData = localStorage.getItem("keysafe-logged-in");
+            if (!sessionData) return null; // No session exists
+           
+            try {
+                const data = JSON.parse(sessionData); // Parse JSON string
+                const now = Date.now(); // Current timestamp
+                // Determine session timeout based on "remember me" setting
+                const SESSION_TIMEOUT = data.rememberMe ?
+                    30 * 24 * 60 * 60 * 1000 : // 30 days for "remember me" sessions
+                    30 * 60 * 1000; // 30 minutes for regular sessions
+               
+                // Check if session has expired
+                if (now - data.loginTime > SESSION_TIMEOUT) {
+                    clearLoggedInUser(); // Clear expired session
+                    return null; // Return null for no valid session
+                }
+               
+                return data; // Return valid session data
+            } catch (e) {
+                // If JSON parsing fails, clear the corrupted session
+                clearLoggedInUser();
+                return null;
+            }
         }
+       
+        // Clears the logged-in user session from localStorage
+        function clearLoggedInUser() {
+            localStorage.removeItem("keysafe-logged-in"); // Remove session data
+        }
+       
+        // Updates the welcome message in the top bar with username
         function setWelcomeBar() {
-            const username = getLoggedInUser();
-            document.getElementById("barLeft").textContent = username ? `Welcome ${username}` : "Welcome";
+            const sessionData = getLoggedInUser(); // Get session data
+            const username = sessionData ? sessionData.username : null; // Extract username
+            // Update text content: "Welcome" or "Welcome, [username]"
+            document.getElementById("barLeft").textContent = username ? `Welcome, ${username}` : "Welcome";
         }
-        setWelcomeBar();
-
-        const menuBtn = document.getElementById("barMenuBtn");
-        const menuOverlay = document.getElementById("menuOverlay");
-        const menuBars = document.getElementById("menuBars");
-        const menuX = document.getElementById("menuX");
-        let menuOpen = false;
-        let menuCloseTimeout = null;
-
+       
+        // ========== SESSION TIMER FUNCTIONALITY ==========
+       
+        // Updates the session timer display in the top bar
+        function updateSessionTimer() {
+            const sessionData = getLoggedInUser(); // Get current session
+            const timerElement = document.getElementById("sessionTimer"); // Timer display element
+           
+            if (!sessionData) {
+                // No valid session
+                timerElement.textContent = "Session: --";
+                timerElement.className = "session-timer"; // Reset classes
+                return;
+            }
+           
+            const now = Date.now(); // Current timestamp
+            // Determine session timeout duration
+            const SESSION_TIMEOUT = sessionData.rememberMe ?
+                30 * 24 * 60 * 60 * 1000 : // 30 days for "remember me"
+                30 * 60 * 1000; // 30 minutes for regular sessions
+           
+            // Calculate remaining session time
+            const timeRemaining = SESSION_TIMEOUT - (now - sessionData.loginTime);
+           
+            if (timeRemaining <= 0) {
+                // Session has expired
+                clearLoggedInUser(); // Clear session
+                window.location.href = "login_signup.html"; // Redirect to login
+                return;
+            }
+           
+            // Convert milliseconds to minutes and seconds
+            const minutes = Math.floor(timeRemaining / 60000);
+            const seconds = Math.floor((timeRemaining % 60000) / 1000);
+           
+            let timerText;
+            if (sessionData.rememberMe) {
+                // For "remember me" sessions, show days/hours for longer periods
+                if (minutes > 1440) { // More than 1 day (24*60)
+                    const days = Math.floor(minutes / 1440);
+                    timerText = `Session: ${days}d`; // Display in days
+                } else if (minutes > 60) {
+                    const hours = Math.floor(minutes / 60);
+                    timerText = `Session: ${hours}h`; // Display in hours
+                } else {
+                    timerText = `Session: ${minutes}m`; // Display in minutes
+                }
+            } else {
+                // For regular sessions, show countdown timer (MM:SS)
+                timerText = `Session: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+           
+            timerElement.textContent = timerText; // Update display
+           
+            // Update styling based on time remaining (for regular sessions only)
+            timerElement.className = "session-timer"; // Reset classes
+            if (!sessionData.rememberMe) {
+                if (minutes < 5) {
+                    timerElement.classList.add("danger"); // Red for critical (<5 min)
+                } else if (minutes < 10) {
+                    timerElement.classList.add("warning"); // Yellow for warning (<10 min)
+                }
+            }
+        }
+       
+        // Checks if user has a valid session on page load
+        function checkSession() {
+            const sessionData = getLoggedInUser(); // Get session
+            if (!sessionData) {
+                window.location.href = "login_signup.html"; // Redirect to login if no session
+                return false; // Return false for invalid session
+            }
+            return true; // Return true for valid session
+        }
+       
+        // ========== PASSWORD STORAGE FUNCTIONS ==========
+       
+        // Generates a user-specific key for storing passwords in localStorage
+        function getAccountPasswordsKey() {
+            const sessionData = getLoggedInUser(); // Get session
+            const username = sessionData ? sessionData.username : null; // Extract username
+            return "keysafe-saved-passwords-" + username; // User-specific key
+        }
+       
+        // Retrieves all saved passwords for the current user
+        function getSavedPasswords() {
+            let arr = []; // Default empty array
+            try {
+                // Get saved passwords from localStorage, parse JSON
+                arr = JSON.parse(localStorage.getItem(getAccountPasswordsKey()) || "[]");
+                if (!Array.isArray(arr)) arr = []; // Ensure it's an array
+            } catch (e) {
+                arr = []; // Return empty array on error
+            }
+            return arr; // Return array of passwords
+        }
+       
+        // ========== ACTIVITY LOGGING FUNCTIONS ==========
+       
+        // Generates a user-specific key for storing activity logs
+        function getActivityLogKey() {
+            const sessionData = getLoggedInUser(); // Get session
+            const username = sessionData ? sessionData.username : null; // Extract username
+            return "keysafe-activity-" + username; // User-specific key
+        }
+       
+        // Retrieves the activity log for the current user
+        function getActivityLog() {
+            return JSON.parse(localStorage.getItem(getActivityLogKey()) || "[]"); // Parse or empty array
+        }
+       
+        // Adds a new activity to the user's activity log
+        function addActivity(action) {
+            const sessionData = getLoggedInUser(); // Get current session
+            if (!sessionData) return; // Exit if no user logged in
+           
+            const activityLog = getActivityLog(); // Get existing activities
+            // Add new activity at beginning of array (most recent first)
+            activityLog.unshift({
+                action: action, // Activity description
+                timestamp: Date.now(), // Current timestamp
+                icon: getActivityIcon(action), // Appropriate icon
+                username: sessionData.username // Store username for verification
+            });
+           
+            // Keep only last 10 activities to prevent storage bloat
+            if (activityLog.length > 10) {
+                activityLog.splice(10); // Remove older entries beyond 10
+            }
+           
+            // Save updated activity log to localStorage
+            localStorage.setItem(getActivityLogKey(), JSON.stringify(activityLog));
+            displayRecentActivity(); // Update the display
+        }
+       
+        // Determines appropriate icon for different activity types
+        function getActivityIcon(action) {
+            if (action.includes("login")) return "fas fa-sign-in-alt"; // Login icon
+            if (action.includes("password") && action.includes("create")) return "fas fa-key"; // Password creation
+            if (action.includes("password") && action.includes("check")) return "fas fa-shield-alt"; // Security check
+            if (action.includes("save")) return "fas fa-save"; // Save operation
+            return "fas fa-info-circle"; // Default icon
+        }
+       
+        // Formats timestamp into human-readable relative time
+        function formatTime(timestamp) {
+            const now = Date.now(); // Current time
+            const diff = now - timestamp; // Time difference in milliseconds
+           
+            if (diff < 60000) return "Just now"; // Less than 1 minute
+            if (diff < 3600000) return `${Math.floor(diff / 60000)} min ago`; // Less than 1 hour
+            if (diff < 86400000) return `${Math.floor(diff / 3600000)} hours ago`; // Less than 1 day
+            return new Date(timestamp).toLocaleDateString(); // Show date for older activities
+        }
+       
+        // Displays the recent activity list in the dashboard
+        function displayRecentActivity() {
+            const activityList = document.getElementById("activityList"); // Container element
+            const activities = getActivityLog(); // Get activities
+           
+            if (activities.length === 0) {
+                // Show empty state if no activities
+                activityList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-history"></i>
+                        <p>No recent activity</p>
+                    </div>
+                `;
+                return;
+            }
+           
+            // Generate HTML for each activity item
+            activityList.innerHTML = activities.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="${activity.icon}"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-action">${activity.action}</div>
+                        <div class="activity-time">${formatTime(activity.timestamp)}</div>
+                    </div>
+                </div>
+            `).join(''); // Join array into single string
+        }
+       
+        // ========== PASSWORD HEALTH ANALYSIS FUNCTIONS ==========
+       
+        // Analyzes password strength and returns a score (0-7)
+        function analyzePasswordStrength(password) {
+            let score = 0; // Start with 0 points
+           
+            // Length check: longer passwords get more points
+            if (password.length >= 12) score += 2; // 2 points for 12+ chars
+            else if (password.length >= 8) score += 1; // 1 point for 8-11 chars
+           
+            // Character variety checks (more variety = more secure)
+            if (/[a-z]/.test(password)) score += 1; // Has lowercase letters
+            if (/[A-Z]/.test(password)) score += 1; // Has uppercase letters
+            if (/[0-9]/.test(password)) score += 1; // Has numbers
+            if (/[^a-zA-Z0-9]/.test(password)) score += 2; // Has special characters (2 points)
+           
+            return score; // Total score (0-7)
+        }
+       
+        // Analyzes overall password health for all saved passwords
+        function analyzePasswordHealth() {
+            const savedPasswords = getSavedPasswords(); // Get all saved passwords
+            let totalPasswords = savedPasswords.length; // Count total passwords
+           
+            if (totalPasswords === 0) {
+                // Return default values if no passwords saved
+                return {
+                    total: 0,
+                    strong: 0,
+                    weak: 0,
+                    reused: 0,
+                    healthScore: 0
+                };
+            }
+           
+            let strongPasswords = 0; // Count of strong passwords (score >= 6)
+            let weakPasswords = 0;   // Count of weak passwords (score <= 3)
+            let reusedPasswords = 0; // Count of reused passwords
+           
+            // Analyze each saved password
+            savedPasswords.forEach(item => {
+                const password = item.password || ""; // Get password (default empty)
+                const score = analyzePasswordStrength(password); // Calculate strength score
+               
+                if (score >= 6) {
+                    strongPasswords++; // Increment strong count
+                } else if (score <= 3) {
+                    weakPasswords++; // Increment weak count
+                }
+            });
+           
+            // Check for password reuse (same password used multiple times)
+            const passwordCounts = {}; // Object to track password frequencies
+            savedPasswords.forEach(item => {
+                const password = item.password || ""; // Get password
+                passwordCounts[password] = (passwordCounts[password] || 0) + 1; // Increment count
+            });
+           
+            // Count passwords that appear more than once
+            reusedPasswords = Object.values(passwordCounts).filter(count => count > 1).length;
+           
+            // Calculate overall health score (0-100)
+            const healthScore = Math.round(
+                (strongPasswords / totalPasswords) * 50 +      // 50% weight for strong passwords
+                ((totalPasswords - reusedPasswords) / totalPasswords) * 30 + // 30% weight for uniqueness
+                ((totalPasswords - weakPasswords) / totalPasswords) * 20     // 20% weight for avoiding weak passwords
+            );
+           
+            return {
+                total: totalPasswords,     // Total number of saved passwords
+                strong: strongPasswords,   // Number of strong passwords
+                weak: weakPasswords,       // Number of weak passwords
+                reused: reusedPasswords,   // Number of reused passwords
+                healthScore: Math.min(100, healthScore) // Cap at 100%
+            };
+        }
+       
+        // Displays password health metrics in the dashboard
+        function displayPasswordHealth() {
+            const healthOverview = document.getElementById("healthOverview"); // Container element
+            const healthData = analyzePasswordHealth(); // Get health metrics
+           
+            if (healthData.total === 0) {
+                // Show placeholder values if no passwords saved
+                healthOverview.innerHTML = `
+                    <div class="health-card">
+                        <div class="health-value">--</div>
+                        <div class="health-label">Overall Health</div>
+                    </div>
+                    <div class="health-card">
+                        <div class="health-value">--</div>
+                        <div class="health-label">Total Passwords</div>
+                    </div>
+                    <div class="health-card">
+                        <div class="health-value">--</div>
+                        <div class="health-label">Strong Passwords</div>
+                    </div>
+                    <div class="health-card">
+                        <div class="health-value">--</div>
+                        <div class="health-label">Reused Passwords</div>
+                    </div>
+                `;
+                return;
+            }
+           
+            // Determine color class based on health score
+            const healthClass = healthData.healthScore >= 80 ? "health-good" :
+                               healthData.healthScore >= 60 ? "health-fair" : "health-poor";
+           
+            // Generate HTML for health metrics
+            healthOverview.innerHTML = `
+                <div class="health-card">
+                    <div class="health-value ${healthClass}">${healthData.healthScore}%</div>
+                    <div class="health-label">Overall Health</div>
+                </div>
+                <div class="health-card">
+                    <div class="health-value">${healthData.total}</div>
+                    <div class="health-label">Total Passwords</div>
+                </div>
+                <div class="health-card">
+                    <div class="health-value ${healthData.strong > 0 ? 'health-good' : 'health-poor'}">${healthData.strong}</div>
+                    <div class="health-label">Strong Passwords</div>
+                </div>
+                <div class="health-card">
+                    <div class="health-value ${healthData.reused === 0 ? 'health-good' : 'health-poor'}">${healthData.reused}</div>
+                    <div class="health-label">Reused Passwords</div>
+                </div>
+            `;
+        }
+       
+        // ========== HAMBURGER MENU FUNCTIONALITY ==========
+       
+        // Get references to menu elements
+        const menuBtn = document.getElementById("barMenuBtn"); // Hamburger button
+        const menuOverlay = document.getElementById("menuOverlay"); // Full-screen overlay
+        const menuBars = document.getElementById("menuBars"); // Hamburger icon
+        const menuX = document.getElementById("menuX"); // Close button (X)
+        let menuOpen = false; // Tracks menu state
+        let menuCloseTimeout = null; // For managing close animation
+       
+        // Open menu when hamburger button is clicked
         menuBtn.onclick = function(e) {
-            e.stopPropagation();
+            e.stopPropagation(); // Prevent event from bubbling up
             if (!menuOpen) {
-                menuOverlay.classList.add("active");
-                menuOverlay.classList.remove("closing");
-                menuBars.style.display = "none";
-                menuOpen = true;
+                menuOverlay.classList.add("active"); // Show overlay
+                menuOverlay.classList.remove("closing"); // Remove closing state
+                menuBars.style.display = "none"; // Hide hamburger bars
+                menuOpen = true; // Update state
+                // Add subtle animation to menu button
+                menuBtn.style.transform = "scale(0.9)";
+                setTimeout(() => {
+                    menuBtn.style.transform = "scale(1)";
+                }, 150);
             }
         };
+       
+        // Close menu when X button is clicked
         menuX.onclick = function(e) {
-            e.stopPropagation();
+            e.stopPropagation(); // Prevent event from bubbling up
             if (menuOpen) {
-                menuOverlay.classList.remove("active");
-                menuOverlay.classList.add("closing");
-                menuBars.style.display = "flex";
-                menuOpen = false;
+                menuOverlay.classList.remove("active"); // Remove active state
+                menuOverlay.classList.add("closing"); // Add closing animation
+                menuBars.style.display = "flex"; // Show hamburger bars again
+                menuOpen = false; // Update state
+                // Add subtle animation to close button
+                menuX.style.transform = "scale(0.9)";
+                setTimeout(() => {
+                    menuX.style.transform = "scale(1)";
+                }, 150);
+               
+                // Clear any existing timeout and set new one
                 clearTimeout(menuCloseTimeout);
                 menuCloseTimeout = setTimeout(() => {
-                    menuOverlay.classList.remove("closing");
-                }, 350);
+                    menuOverlay.classList.remove("closing"); // Remove closing class after animation
+                }, 350); // Match CSS animation duration
             }
         };
+       
+        // Close menu when clicking on overlay background (not menu items)
         menuOverlay.onclick = function(e) {
             if(e.target === menuOverlay && menuOpen) {
-                menuX.onclick(e);
+                menuX.onclick(e); // Trigger close button click
             }
         };
+       
+        // Helper function to close the menu
         function closeMenu() {
             if (menuOpen) {
-                menuX.onclick(new Event("click"));
+                menuX.onclick(new Event("click")); // Simulate click on close button
             }
         }
-
+       
+        // ========== MENU NAVIGATION HANDLERS ==========
+       
+        // Password Maker menu item click handler
         document.getElementById("menuPasswordMaker").onclick = function() {
-            closeMenu();
-            window.location.href = "password_maker.html";
+            closeMenu(); // Close menu first
+            addActivity("Accessed Password Maker"); // Log activity
+            window.location.href = "password_maker.html"; // Navigate to page
         };
+       
+        // Password Checker menu item click handler
         document.getElementById("menuPasswordChecker").onclick = function() {
             closeMenu();
+            addActivity("Accessed Password Security Checker");
             window.location.href = "password_checker.html";
         };
+       
+        // Saved Passwords menu item click handler
         document.getElementById("menuSavedPasswords").onclick = function() {
             closeMenu();
+            addActivity("Accessed Saved Passwords");
             window.location.href = "password_saved.html";
         };
+       
+        // FAQ menu item click handler
         document.getElementById("menuFAQ").onclick = function() {
             closeMenu();
+            addActivity("Accessed FAQ");
             window.location.href = "faq.html";
         };
+       
+        // About menu item click handler (opens external link in new tab)
         document.getElementById("menuAbout").onclick = function() {
             closeMenu();
-            window.open("https://kingfarooq.github.io", "_blank");
+            addActivity("Accessed About Page");
+            window.open("https://kingfarooq.github.io", "_blank"); // Open in new tab
         };
+       
+        // Logout menu item click handler
         document.getElementById("menuLogout").onclick = function() {
-            localStorage.removeItem("keysafe-logged-in");
-            window.location.href = "login_signup.html";
+            addActivity("Logged out"); // Log activity
+            clearLoggedInUser(); // Clear session data
+            window.location.href = "login_signup.html"; // Redirect to login
         };
-
-        if (!getLoggedInUser()) {
-            window.location.href = "login_signup.html";
+       
+        // ========== QUICK ACTION BUTTON HANDLERS ==========
+       
+        // Log activity when quick action buttons are clicked
+        document.getElementById("btnPasswordMaker").addEventListener("click", function() {
+            addActivity("Accessed Password Maker");
+        });
+       
+        document.getElementById("btnPasswordChecker").addEventListener("click", function() {
+            addActivity("Accessed Password Security Checker");
+        });
+       
+        document.getElementById("btnSavedPasswords").addEventListener("click", function() {
+            addActivity("Accessed Saved Passwords");
+        });
+       
+        // ========== PAGE INITIALIZATION ==========
+       
+        // Initializes the page when it loads
+        function initPage() {
+            if (!checkSession()) return; // Check session, redirect if invalid
+           
+            setWelcomeBar(); // Set welcome message with username
+            updateSessionTimer(); // Initialize session timer display
+            displayRecentActivity(); // Load and display activity log
+            displayPasswordHealth(); // Calculate and display password health
+           
+            // Update session timer every second (real-time countdown)
+            setInterval(updateSessionTimer, 1000);
+           
+            // Add initial login activity if this is first page load after login
+            const activities = getActivityLog(); // Get existing activities
+            if (activities.length === 0 || !activities[0].action.includes("login")) {
+                addActivity("Logged in to Key Safe"); // Add login activity
+            }
         }
+       
+        // Initialize page when DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', initPage);
     </script>
 </body>
 </html>
-
-<!--
-    Notes:
-    - Fixed top bar with welcome message
-    - Full Screen navigation
-    - Hamburger style menu
-    - About me brings the user to my digital portfolio
-    - Logout functionallity
-    - Redirects user to login page if not already logged in
-    
-    Key functions:
-    - Menu Managment
-    - Authenticaion System
--->

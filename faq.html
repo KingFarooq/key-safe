@@ -1,38 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta tags for character encoding and responsive design -->
     <meta charset="UTF-8">
     <title>FAQ | Key Safe</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Google Fonts -->
+   
+    <!-- External fonts and icons -->
     <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   
     <style>
+        /* CSS Variables for consistent theming */
         :root {
-            --background: #232326;
-            --card-bg: #3a3a3e;
-            --primary: #2d8cff;
-            --primary-hover: #2063bb;
-            --text: #fff;
-            --muted: #b0b6c4;
-            --danger: #ff5757;
-            --warn: #ffb627;
-            --success: #30cf7b;
-            --bar-bg: #3a3a3e;
-            --card-radius: 18px;
-            --card-padding: 32px 24px;
+            --background: #0f172a;
+            --container-bg: #1e293b;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --input-bg: #334155;
+            --input-border: #475569;
+            --error: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            --gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --danger: #ef4444;
         }
-        body {
+       
+        /* Global reset and base styles */
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+       
+        body {
             background: var(--background);
             color: var(--text);
             font-family: 'Inter', Arial, sans-serif;
             min-height: 100vh;
+            line-height: 1.6;
         }
+       
+        /* Top navigation bar */
         .top-bar {
             width: 100%;
-            height: 60px;
-            background: var(--bar-bg);
+            height: 70px;
+            background: var(--container-bg);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -42,91 +58,112 @@
             top: 0;
             left: 0;
             z-index: 100;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+            animation: slideDown 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
+       
+        /* Animation for top bar entrance */
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+       
+        /* Left section of top bar */
         .bar-left {
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             font-weight: bold;
             color: var(--text);
-        }
-        .bar-menu {
-            width: 32px;
-            height: 32px;
             display: flex;
             align-items: center;
-            justify-content: flex-end;
+            gap: 15px;
+        }
+       
+        /* Session timer styling */
+        .session-timer {
+            font-size: 0.85rem;
+            color: var(--muted);
+            background: var(--input-bg);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+       
+        /* Warning state for session timer */
+        .session-timer.warning {
+            color: var(--warning);
+            background: rgba(245, 158, 11, 0.1);
+        }
+       
+        /* Danger state for session timer */
+        .session-timer.danger {
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+       
+        /* Hamburger menu button */
+        .bar-menu {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             position: relative;
             z-index: 101;
-            background: none;
+            background: var(--input-bg);
             border: none;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
-        .bar-menu-bars, .bar-menu-x {
-            width: 28px;
-            height: 28px;
+       
+        .bar-menu:hover {
+            background: var(--primary);
+            transform: scale(1.05);
+        }
+       
+        /* Three-bar icon for menu */
+        .bar-menu-bars {
+            width: 24px;
+            height: 18px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: space-between;
             position: relative;
+            transition: all 0.3s ease;
         }
+       
         .bar-menu-bars span {
             display: block;
-            height: 4px;
+            height: 3px;
             width: 100%;
-            background: #fff;
-            margin: 3.5px 0;
+            background: var(--text);
             border-radius: 2px;
-            transition: background 0.3s;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            transform-origin: center;
         }
-        .bar-menu-x {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 32px;
-            height: 32px;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            background: none;
+       
+        .bar-menu:hover .bar-menu-bars span {
+            background: white;
         }
-        .bar-menu-x span {
-            position: absolute;
-            width: 24px;
-            height: 4px;
-            top: 50%;
-            left: 50%;
-            background: #fff;
-            border-radius: 2px;
-            transition:
-                transform 0.35s cubic-bezier(.55,.06,.68,.19),
-                opacity 0.18s,
-                background 0.2s;
-        }
-        .bar-menu-x .x1 {
-            transform: translate(-50%, -50%) rotate(45deg);
-        }
-        .bar-menu-x .x2 {
-            transform: translate(-50%, -50%) rotate(-45deg);
-        }
+       
+        /* X icon for closing menu */
+        /* Show X when menu is open */
         .menu-overlay .bar-menu-x {
             display: flex !important;
             position: absolute;
             top: 30px;
             right: 30px;
             z-index: 201;
-            background: none;
         }
-        .menu-overlay .bar-menu-x:hover span {
-            background: var(--primary);
-        }
+       
+        /* Fullscreen menu overlay */
         .menu-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: var(--menu-bg);
+            background: var(--container-bg);
             color: #fff;
             z-index: 200;
             display: none;
@@ -135,346 +172,843 @@
             justify-content: center;
             opacity: 0;
             pointer-events: none;
-            transition: opacity var(--menu-fade);
-            background-color: #3a3a3e;
+            transition: opacity 0.35s;
         }
+       
+        /* Active state for menu overlay */
         .menu-overlay.active {
             display: flex;
             pointer-events: all;
             opacity: 1;
-            animation: fadeInMenu 0.4s;
+            animation: fadeInZoom 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
+       
+        /* Closing animation for menu overlay */
         .menu-overlay.closing {
             opacity: 0;
             pointer-events: none;
-            animation: fadeOutMenu 0.35s cubic-bezier(.55,.06,.68,.19);
+            animation: fadeOut 0.35s cubic-bezier(.55,.06,.68,.19);
         }
-        @keyframes fadeInMenu {
-            from { opacity: 0;}
-            to { opacity: 1;}
+       
+        /* Menu entrance animation */
+        @keyframes fadeInZoom {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
-        @keyframes fadeOutMenu {
-            from { opacity: 1;}
-            to { opacity: 0;}
+       
+        /* Menu exit animation */
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
         }
+       
+        /* Container for menu items */
         .menu-list {
             width: 90%;
-            max-width: 350px;
+            max-width: 400px;
             display: flex;
             flex-direction: column;
-            gap: 22px;
+            gap: 16px;
         }
-        .menu-item-card, .menu-item-card-logout {
-            background: #232326;
-            color: #fff;
-            border-radius: 12px;
+       
+        /* Card-style menu items */
+        .menu-item-card {
+            background: var(--input-bg);
+            color: var(--text);
+            border-radius: 16px;
             padding: 0;
-            box-shadow: 0 4px 14px #0003;
-            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
             cursor: pointer;
             border: none;
             outline: none;
+            overflow: hidden;
+            border: 2px solid transparent;
         }
+       
+        /* Individual menu item */
         .menu-item {
-            font-size: 1.3rem;
-            padding: 24px 0;
+            font-size: 1.1rem;
+            padding: 20px 0;
             text-align: center;
-            color: #fff;
+            color: var(--text);
             border: none;
-            border-radius: 12px;
+            border-radius: 16px;
             background: none;
-            transition: color 0.2s;
+            transition: all 0.3s;
             font-family: 'Inter', Arial, sans-serif;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
         }
-        .menu-item-card:hover, .menu-item-card:focus-within {
-            box-shadow: 0 4px 20px #2d8cff55, 0 2px 8px #0005;
+       
+        /* Hover effects for menu items */
+        .menu-item-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.3);
+            border-color: var(--primary);
         }
-        .menu-item-card:hover .menu-item, .menu-item-card:focus-within .menu-item {
+       
+        .menu-item:hover {
             color: var(--primary);
-            background: none;
-        }
-        .menu-item-card-logout:hover, .menu-item-card-logout:focus-within {
-            background: var(--danger) !important;
-            box-shadow: 0 4px 20px #ff575733, 0 2px 8px #0005;
-        }
-        .menu-item-card-logout:hover .menu-item, .menu-item-card-logout:focus-within .menu-item {
-            color: #fff !important;
         }
 
-        @media (max-width: 600px) {
-            .top-bar {
-                padding: 0 12px;
-            }
-            .menu-list {
-                max-width: 99vw;
-                width: 99vw;
-                border-radius: 0;
-                margin-top: 62px;
-            }
+        /* Special styling for logout button */
+        .menu-item-card.logout {
+            background: var(--input-bg);
+            margin-top: 10px;
+        }
+       
+        .menu-item-card.logout .menu-item {
+            color: #fff;
+        }
+       
+        .menu-item-card.logout:hover {
+            background: var(--danger);
+            border-color: var(--danger);
+            box-shadow: 0 8px 30px rgba(239, 68, 68, 0.3);
         }
 
-        .container {
+        /* Main content area */
+        .main-content {
+            background: var(--background);
+            padding-top: 90px;
+            min-height: 100vh;
+            min-height: 100svh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            padding: 90px 32px 32px 32px;
-            min-height: 100vh;
-            box-sizing: border-box;
-            gap: 32px;
-        }
-        .faq-header-card {
-            background: var(--card-bg);
-            border-radius: var(--card-radius);
-            box-shadow: 0 4px 24px #0007;
-            padding: var(--card-padding);
             width: 100%;
-            max-width: 700px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            align-items: flex-start;
             box-sizing: border-box;
+            padding-bottom: 30px;
+            animation: fadeInUp 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
-        .faq-header-card h2 {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0 0 12px 0;
-            letter-spacing: 1px;
-        }
-        .faq-header-card .version {
-            font-size: 1.05rem;
-            color: var(--muted);
-            font-weight: 600;
-            margin-bottom: 0;
-        }
-        .faq-card-list {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            gap: 30px;
-            width: 100%;
-            justify-content: center;
-            margin-top: 8px;
-        }
-        .faq-card {
-            background: var(--card-bg);
-            border-radius: var(--card-radius);
-            box-shadow: 0 3px 16px #0005;
-            padding: 32px 22px;
-            min-width: 320px;
-            max-width: 480px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 13px;
-            box-sizing: border-box;
-            align-items: flex-start;
-        }
-        .faq-q {
-            font-size: 1.13rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 3px;
-        }
-        .faq-a {
-            font-size: 1.06rem;
-            color: var(--muted);
-            margin-left: 6px;
-            margin-bottom: 0;
-            line-height: 1.62;
-        }
-        .info {
-            color: var(--muted);
-            font-size: 0.97em;
-            line-height: 1.5;
-            margin-bottom: 0;
-        }
-        @media (max-width: 1200px) {
-            .faq-card-list {
-                flex-direction: column;
-                gap: 20px;
-                align-items: stretch;
-            }
-            .faq-card {
-                max-width: 100vw;
-                min-width: 0;
-            }
-        }
-        @media (max-width: 900px) {
-            .container {
-                padding: 80px 4vw 20px 4vw;
-            }
-            .faq-header-card, .faq-card {
-                max-width: 100vw;
-                min-width: 0;
-            }
-        }
-
-        /* Fade in on load */
+       
+        /* Content entrance animation */
         @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(32px) scale(0.96);}
-        to   { opacity: 1; transform: translateY(0) scale(1);}
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        /* Fade in with slight zoom */
-        @keyframes fadeInZoom {
-        from { opacity: 0; transform: scale(0.95);}
-        to   { opacity: 1; transform: scale(1);}
+       
+        /* Dashboard container */
+        .dashboard {
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
         }
-
-        /* Fade out */
-        @keyframes fadeOut {
-        from { opacity: 1;}
-        to   { opacity: 0;}
+       
+        /* Individual dashboard sections */
+        .dashboard-section {
+            background: var(--container-bg);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+            animation: fadeInUp 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) both;
         }
-
-        /* Subtle scale on hover (for cards/buttons) */
-        .card, .menu-item-card, .generate-btn, .alternate-password, .back-btn {
-        transition: transform 0.22s cubic-bezier(.55,.06,.68,.19), box-shadow 0.22s;
+       
+        /* Staggered animations for sections */
+        .dashboard-section:nth-child(1) { animation-delay: 0.1s; }
+        .dashboard-section:nth-child(2) { animation-delay: 0.2s; }
+       
+        /* Section titles */
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .card:hover, .menu-item-card:hover, .generate-btn:hover, .alternate-password:hover, .back-btn:hover {
-        transform: scale(1.04);
-        box-shadow: 0 8px 32px #2d8cff33, 0 2px 12px #0003;
+       
+        .section-title i {
+            color: var(--primary);
         }
-
-        /* Menu overlay fade in/out */
-        .menu-overlay {
-        animation: fadeInZoom 0.5s cubic-bezier(.55,.06,.68,.19);
+       
+        /* Informational message box */
+        .info-message {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-size: 0.95rem;
         }
-        .menu-overlay.closing {
-        animation: fadeOut 0.32s cubic-bezier(.55,.06,.68,.19);
+       
+        /* Search and filter container */
+        .search-filter-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
         }
-
-        /* Fade in for password outputs, suggestions, faq cards */
-        .password-output, .suggestion, .faq-card, .alternate-password {
-        animation: fadeInUp 0.6s cubic-bezier(.55,.06,.68,.19);
+       
+        /* Search box styling */
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
         }
-
-        /* Fade-in stagger for multiple items (use inline style or nth-child) */
-        .faq-card:nth-child(1) { animation-delay: 0.04s; }
-        .faq-card:nth-child(2) { animation-delay: 0.08s; }
-        .faq-card:nth-child(3) { animation-delay: 0.12s; }
-        /* ... add more for more items */
-
-        /* Animated strength bar fill */
-        .strength-bar {
-        transition: width 0.33s cubic-bezier(.55,.06,.68,.19), background 0.2s;
+       
+        .search-input {
+            width: 100%;
+            padding: 14px 50px 14px 16px;
+            border: 2px solid var(--input-border);
+            border-radius: 12px;
+            background: var(--input-bg);
+            color: var(--text);
+            font-size: 1rem;
+            font-family: 'Inter', Arial, sans-serif;
+            transition: all 0.3s;
         }
-
-        /* Animate top-bar in */
-        .top-bar {
-        animation: fadeInZoom 0.5s cubic-bezier(.55,.06,.68,.19);
+       
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
-
-        /* Button press effect */
-        .generate-btn:active, .back-btn:active {
-        transform: scale(0.97);
+       
+        /* Search icon */
+        .search-icon {
+            position: absolute;
+            right: 16px;
+            color: var(--muted);
+            font-size: 1.1rem;
         }
-
-        /* Copied badge fade in/out */
-        .copied-badge {
-        animation: fadeInZoom 0.3s;
+       
+        /* Filter tags container */
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+       
+        /* Individual filter tag */
+        .filter-tag {
+            padding: 8px 16px;
+            background: var(--input-bg);
+            color: var(--muted);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+       
+        .filter-tag:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+       
+        /* Active filter tag */
+        .filter-tag.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+       
+        /* Results counter */
+        .results-count {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+       
+        /* FAQ grid layout */
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+       
+        /* Individual FAQ item */
+        .faq-item {
+            background: var(--input-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            animation: fadeInUp 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            cursor: pointer;
+            overflow: hidden;
+        }
+       
+        .faq-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
+        }
+       
+        /* Hidden FAQ item (for filtering) */
+        .faq-item.hidden {
+            display: none;
+        }
+       
+        /* FAQ header containing question and toggle */
+        .faq-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+        }
+       
+        /* FAQ question text */
+        .faq-question {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: var(--primary);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            flex: 1;
+        }
+       
+        .faq-question i {
+            margin-top: 3px;
+            font-size: 1rem;
+        }
+       
+        /* Expand/collapse toggle button */
+        .faq-toggle {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+            padding: 5px;
+            border-radius: 5px;
+        }
+       
+        .faq-toggle:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+       
+        /* Expanded state for toggle button */
+        .faq-toggle.expanded {
+            transform: rotate(180deg);
+        }
+       
+        /* FAQ answer (collapsible) */
+        .faq-answer {
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            padding-left: 26px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, margin-top 0.3s ease;
+        }
+       
+        /* Expanded state for answer */
+        .faq-answer.expanded {
+            max-height: 500px;
+            margin-top: 15px;
+        }
+       
+        /* FAQ tags container */
+        .faq-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+       
+        /* Individual FAQ tag */
+        .faq-tag {
+            padding: 4px 10px;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--primary);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+       
+        /* Version information */
+        .version-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+       
+        /* Version badge */
+        .version-badge {
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+       
+        /* No results message */
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--muted);
+            font-size: 1.1rem;
+            grid-column: 1 / -1;
+        }
+       
+        /* Responsive design for tablets and smaller screens */
+        @media (max-width: 768px) {
+            .top-bar {
+                padding: 0 20px;
+                height: 60px;
+            }
+           
+            .bar-left {
+                font-size: 1.1rem;
+            }
+           
+            .session-timer {
+                font-size: 0.75rem;
+                padding: 3px 8px;
+            }
+           
+            .bar-menu {
+                width: 40px;
+                height: 40px;
+            }
+           
+            .main-content {
+                padding-top: 80px;
+            }
+           
+            .dashboard {
+                width: 95%;
+            }
+           
+            .dashboard-section {
+                padding: 20px;
+            }
+           
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+           
+            .filter-tags {
+                justify-content: center;
+            }
+           
+            .menu-overlay .bar-menu-x {
+                top: 20px;
+                right: 20px;
+            }
+        }
+       
+        /* Responsive design for mobile phones */
+        @media (max-width: 480px) {
+            .top-bar {
+                padding: 0 15px;
+            }
+           
+            .dashboard-section {
+                padding: 15px;
+            }
+           
+            .section-title {
+                font-size: 1.2rem;
+            }
+           
+            .faq-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+           
+            .faq-toggle {
+                align-self: flex-end;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Top Navigation Bar -->
     <div class="top-bar">
-        <div class="bar-left" id="barLeft">FAQ</div>
+        <div class="bar-left">
+            <span id="barLeft">FAQ</span>
+            <div class="session-timer" id="sessionTimer">Session: --</div>
+        </div>
+        <!-- Hamburger Menu Button -->
         <button class="bar-menu" id="barMenuBtn" title="Open menu" aria-label="Menu">
-            <div class="bar-menu-bars" id="menuBars" style="display:flex">
+            <div class="bar-menu-bars" id="menuBars">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
         </button>
     </div>
+   
+    <!-- Fullscreen Menu Overlay -->
     <div class="menu-overlay" id="menuOverlay">
-        <div class="bar-menu-x" id="menuX" style="display:flex">
+        <!-- Close Menu Button (X) -->
+        <div class="bar-menu-x" id="menuX">
             <span class="x1"></span>
             <span class="x2"></span>
         </div>
+        <!-- Menu Items List -->
         <div class="menu-list">
-            <div class="menu-item-card home" id="menuHome">
-                <div class="menu-item">Home</div>
-            </div>
-            <div class="menu-item-card"><div class="menu-item" id="menuPasswordMaker">Password Maker</div></div>
-            <div class="menu-item-card"><div class="menu-item" id="menuPasswordChecker">Password Security Checker</div></div>
-            <div class="menu-item-card"><div class="menu-item" id="menuSavedPasswords">Saved Passwords</div></div>
-            <div class="menu-item-card"><div class="menu-item" id="menuFAQ">FAQ</div></div>
-            <div class="menu-item-card"><div class="menu-item" id="menuAbout">About</div></div>
-            <div class="menu-item-card logout" id="menuLogoutCard"><div class="menu-item" id="menuLogout">Log Out</div></div>
+            <div class="menu-item-card"><div class="menu-item" id="menuHome"><i class="fas fa-home"></i> Home</div></div>
+            <div class="menu-item-card"><div class="menu-item" id="menuPasswordMaker"><i class="fas fa-key"></i> Password Maker</div></div>
+            <div class="menu-item-card"><div class="menu-item" id="menuPasswordChecker"><i class="fas fa-shield-alt"></i> Password Security Checker</div></div>
+            <div class="menu-item-card"><div class="menu-item" id="menuSavedPasswords"><i class="fas fa-save"></i> Saved Passwords</div></div>
+            <div class="menu-item-card"><div class="menu-item" id="menuFAQ"><i class="fas fa-question-circle"></i> FAQ</div></div>
+            <div class="menu-item-card"><div class="menu-item" id="menuAbout"><i class="fas fa-info-circle"></i> About</div></div>
+            <div class="menu-item-card logout"><div class="menu-item" id="menuLogout"><i class="fas fa-sign-out-alt"></i> Log Out</div></div>
         </div>
     </div>
-    <div class="container">
-        <div class="faq-header-card">
-            <h2>Frequently Asked Questions</h2>
-            <div class="version">Key Safe Version: <span id="versionNum">v1.30.0</span></div>
-            <div class="info">Have more questions? Reach out via the About section or the support contact.</div>
-        </div>
-        <div class="faq-card-list">
-            <div class="faq-card">
-                <div class="faq-q">Q: Is Key Safe free to use?</div>
-                <div class="faq-a">A: Yes, Key Safe is free for personal use. An account is required.</div>
-            </div>
-            <div class="faq-card">
-                <div class="faq-q">Q: Does Key Safe store my passwords?</div>
-                <div class="faq-a">A: No, passwords generated or checked are never stored. Only saved passwords you choose are stored in your account.</div>
-            </div>
-            <div class="faq-card">
-                <div class="faq-q">Q: How is password strength calculated?</div>
-                <div class="faq-a">A: Password strength is based on length, character variety (uppercase, lowercase, numbers, symbols), and avoidance of common patterns or repeated characters.</div>
-            </div>
-            <div class="faq-card">
-                <div class="faq-q">Q: Can I recover or view previously generated passwords?</div>
-                <div class="faq-a">A: No, unless you explicitly save a password in your account, generated passwords are never stored and cannot be recovered.</div>
-            </div>
-            <div class="faq-card">
-                <div class="faq-q">Q: Why do suggestions disappear if my password is very strong?</div>
-                <div class="faq-a">A: If your password meets all recommended criteria, there are no further suggestions to improve it.</div>
-            </div>
-            <div class="faq-card">
-                <div class="faq-q">Q: What is the best way to make a strong password?</div>
-                <div class="faq-a">A: Use 12+ characters, include uppercase and lowercase letters, numbers, and symbols. Avoid common words and patterns.</div>
-            </div>
-            <div class="faq-card">
-                <div class="faq-q">Q: Can I check the strength of saved passwords?</div>
-                <div class="faq-a">A: Yes, you can check and update saved passwords using the Password Security Checker.</div>
-            </div>
-            <div class="faq-card">
-                <div class="faq-q">Q: How do I report a bug or suggest a feature?</div>
-                <div class="faq-a">A: Navigate to the about page, then email the problem.</div>
-            </div>
-            <div class="faq-card">
-                <div class="faq-q">Q: Is there a mobile app for Key Safe?</div>
-                <div class="faq-a">A: Currently, Key Safe is a web application. A mobile app may be considered in the future.</div>
-            </div>
-            <div class="faq-card">
-                <div class="faq-q">Q: How do I log out?</div>
-                <div class="faq-a">A: Open the menu (top right) and click "Log Out" at the bottom.</div>
-            </div>
-            <div class="faq-card">
-                <div class="faq-q">Q: What if I forget my password?</div>
-                <div class="faq-a">A: If you forget your account password, you permanently lose your account until you get the right password.</div>
-            </div>
-            <div class="faq-card">
-                <div class="faq-q">Q: How do I delete my account?</div>
-                <div class="faq-a">A: Currently, account deletion is not supported. Please contact support for assistance.</div>
-            </div>
-            <div class="faq-card">
-                <div class="faq-q">Q: Is Key Safe secure?</div>
-                <div class="faq-a">A: Key Safe is currently not secure, security implementations will begin rolling out in future updates.</div>
+   
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="dashboard">
+            <!-- FAQ Section -->
+            <div class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-question-circle"></i> Frequently Asked Questions</h2>
+               
+                <!-- Informational Message -->
+                <div class="info-message">
+                    <i class="fas fa-info-circle"></i> Have more questions? Reach out via the About section.
+                </div>
+               
+                <!-- Version Information -->
+                <div class="version-info">
+                    <span>Key Safe Version:</span>
+                    <div class="version-badge" id="versionNum">v2.17.00</div>
+                </div>
+               
+                <!-- Search and Filter Section -->
+                <div class="search-filter-container">
+                    <!-- Search Box -->
+                    <div class="search-box">
+                        <input type="text" class="search-input" id="faqSearch" placeholder="Search FAQs...">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                   
+                    <!-- Filter Tags -->
+                    <div class="filter-tags" id="filterTags">
+                        <div class="filter-tag active" data-tag="all">All</div>
+                        <div class="filter-tag" data-tag="general">General</div>
+                        <div class="filter-tag" data-tag="security">Security</div>
+                        <div class="filter-tag" data-tag="password">Passwords</div>
+                        <div class="filter-tag" data-tag="account">Account</div>
+                        <div class="filter-tag" data-tag="features">Features</div>
+                    </div>
+                   
+                    <!-- Results Counter -->
+                    <div class="results-count" id="resultsCount"></div>
+                </div>
+               
+                <!-- FAQ Grid (dynamically populated by JavaScript) -->
+                <div class="faq-grid" id="faqGrid">
+                    <!-- FAQ items will be populated by JavaScript -->
+                </div>
             </div>
         </div>
+    </div>
+   
     <script>
-        // Menu toggle and X animation
+        // FAQ Data with Tags - Array of question/answer objects
+        const faqData = [
+            {
+                id: 1,
+                question: "Is Key Safe free to use?",
+                answer: "Yes, Key Safe is free for personal use. An account is required.",
+                tags: ["general", "account"]
+            },
+            {
+                id: 2,
+                question: "Does Key Safe store my passwords?",
+                answer: "No, passwords generated or checked are never stored. Only saved passwords you choose are stored in your account.",
+                tags: ["security", "passwords"]
+            },
+            {
+                id: 3,
+                question: "How is password strength calculated?",
+                answer: "Password strength is based on length, character variety (uppercase, lowercase, numbers, symbols), and avoidance of common patterns or repeated characters.",
+                tags: ["passwords", "security"]
+            },
+            {
+                id: 4,
+                question: "Can I recover or view previously generated passwords?",
+                answer: "No, unless you explicitly save a password in your account, generated passwords are never stored and cannot be recovered.",
+                tags: ["passwords", "features"]
+            },
+            {
+                id: 5,
+                question: "Why do suggestions disappear if my password is very strong?",
+                answer: "If your password meets all recommended criteria, there are no further suggestions to improve it.",
+                tags: ["passwords", "features"]
+            },
+            {
+                id: 6,
+                question: "What is the best way to make a strong password?",
+                answer: "Use 12+ characters, include uppercase and lowercase letters, numbers, and symbols. Avoid common words and patterns.",
+                tags: ["passwords", "security"]
+            },
+            {
+                id: 7,
+                question: "Can I check the strength of saved passwords?",
+                answer: "Yes, you can check and update saved passwords using the Password Security Checker.",
+                tags: ["passwords", "features"]
+            },
+            {
+                id: 8,
+                question: "How do I report a bug or suggest a feature?",
+                answer: "Navigate to the about page, then email the problem.",
+                tags: ["general", "features"]
+            },
+            {
+                id: 9,
+                question: "Is there a mobile app for Key Safe?",
+                answer: "Currently, Key Safe is a web application. A mobile app may be considered in the future.",
+                tags: ["general", "features"]
+            },
+            {
+                id: 10,
+                question: "How do I log out?",
+                answer: "Open the menu (top right) and click 'Log Out' at the bottom.",
+                tags: ["account", "general"]
+            },
+            {
+                id: 11,
+                question: "What if I forget my password?",
+                answer: "If you forget your account password, you permanently lose your account until you get the right password.",
+                tags: ["account", "security"]
+            },
+            {
+                id: 12,
+                question: "How do I delete my account?",
+                answer: "Currently, account deletion is not supported. Please contact support for assistance.",
+                tags: ["account", "general"]
+            },
+            {
+                id: 13,
+                question: "Is Key Safe secure?",
+                answer: "Key Safe is currently not secure, security implementations will begin rolling out in future updates.",
+                tags: ["security", "general"]
+            }
+        ];
+
+        // Session Management Functions
+       
+        // Get logged in user data from localStorage
+        function getLoggedInUser() {
+            const sessionData = localStorage.getItem("keysafe-logged-in");
+            if (!sessionData) return null;
+           
+            try {
+                const data = JSON.parse(sessionData);
+                const now = Date.now();
+                const SESSION_TIMEOUT = data.rememberMe ?
+                    30 * 24 * 60 * 60 * 1000 : // 30 days for "remember me"
+                    30 * 60 * 1000; // 30 minutes for regular session
+               
+                // Check if session has expired
+                if (now - data.loginTime > SESSION_TIMEOUT) {
+                    clearLoggedInUser();
+                    return null;
+                }
+               
+                return data;
+            } catch (e) {
+                clearLoggedInUser();
+                return null;
+            }
+        }
+
+        // Clear user session data
+        function clearLoggedInUser() {
+            localStorage.removeItem("keysafe-logged-in");
+        }
+
+        // Update session timer display
+        function updateSessionTimer() {
+            const sessionData = getLoggedInUser();
+            const timerElement = document.getElementById("sessionTimer");
+           
+            if (!sessionData) {
+                timerElement.textContent = "Session: --";
+                timerElement.className = "session-timer";
+                return;
+            }
+           
+            const now = Date.now();
+            const SESSION_TIMEOUT = sessionData.rememberMe ?
+                30 * 24 * 60 * 60 * 1000 : // 30 days
+                30 * 60 * 1000; // 30 minutes
+           
+            const timeRemaining = SESSION_TIMEOUT - (now - sessionData.loginTime);
+           
+            // Redirect to login if session expired
+            if (timeRemaining <= 0) {
+                clearLoggedInUser();
+                window.location.href = "login_signup.html";
+                return;
+            }
+           
+            // Format time remaining for display
+            const minutes = Math.floor(timeRemaining / 60000);
+            const seconds = Math.floor((timeRemaining % 60000) / 1000);
+           
+            let timerText;
+            if (sessionData.rememberMe) {
+                if (minutes > 1440) {
+                    const days = Math.floor(minutes / 1440);
+                    timerText = `Session: ${days}d`;
+                } else if (minutes > 60) {
+                    const hours = Math.floor(minutes / 60);
+                    timerText = `Session: ${hours}h`;
+                } else {
+                    timerText = `Session: ${minutes}m`;
+                }
+            } else {
+                timerText = `Session: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+           
+            timerElement.textContent = timerText;
+            timerElement.className = "session-timer";
+           
+            // Add warning/danger classes based on time remaining
+            if (!sessionData.rememberMe) {
+                if (minutes < 5) {
+                    timerElement.classList.add("danger");
+                } else if (minutes < 10) {
+                    timerElement.classList.add("warning");
+                }
+            }
+        }
+
+        // FAQ Functionality
+       
+        // Current filter and search state
+        let currentFilter = 'all';
+        let currentSearch = '';
+
+        // Render FAQ items based on current filter and search
+        function renderFAQItems() {
+            const faqGrid = document.getElementById('faqGrid');
+            const resultsCount = document.getElementById('resultsCount');
+           
+            // Filter FAQ items based on active filter and search term
+            let filteredItems = faqData.filter(item => {
+                // Apply tag filter
+                const tagMatch = currentFilter === 'all' || item.tags.includes(currentFilter);
+               
+                // Apply search filter
+                const searchMatch = currentSearch === '' ||
+                    item.question.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                    item.answer.toLowerCase().includes(currentSearch.toLowerCase());
+               
+                return tagMatch && searchMatch;
+            });
+           
+            // Update results count display
+            resultsCount.textContent = `${filteredItems.length} of ${faqData.length} questions`;
+           
+            // Clear grid
+            faqGrid.innerHTML = '';
+           
+            // Show no results message if no items match filters
+            if (filteredItems.length === 0) {
+                faqGrid.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <div>No questions found matching your criteria</div>
+                        <div style="font-size: 0.9rem; margin-top: 5px;">Try adjusting your search or filter</div>
+                    </div>
+                `;
+                return;
+            }
+           
+            // Render filtered items
+            filteredItems.forEach((item, index) => {
+                const faqItem = document.createElement('div');
+                faqItem.className = 'faq-item';
+                faqItem.style.animationDelay = `${index * 0.1}s`;
+               
+                // Create FAQ item HTML structure
+                faqItem.innerHTML = `
+                    <div class="faq-header">
+                        <div class="faq-question">
+                            <i class="fas fa-question"></i>
+                            ${item.question}
+                        </div>
+                        <button class="faq-toggle" aria-label="Toggle answer">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="faq-answer">
+                        ${item.answer}
+                    </div>
+                    <div class="faq-tags">
+                        ${item.tags.map(tag => `<span class="faq-tag">${tag}</span>`).join('')}
+                    </div>
+                `;
+               
+                // Add click event for expand/collapse functionality
+                const toggleBtn = faqItem.querySelector('.faq-toggle');
+                const answerEl = faqItem.querySelector('.faq-answer');
+               
+                // Click anywhere on FAQ item to toggle answer
+                faqItem.addEventListener('click', (e) => {
+                    if (!toggleBtn.contains(e.target)) {
+                        answerEl.classList.toggle('expanded');
+                        toggleBtn.classList.toggle('expanded');
+                    }
+                });
+               
+                // Click specifically on toggle button
+                toggleBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent event from bubbling to parent
+                    answerEl.classList.toggle('expanded');
+                    toggleBtn.classList.toggle('expanded');
+                });
+               
+                faqGrid.appendChild(faqItem);
+            });
+        }
+
+        // Search functionality - listen for input changes
+        document.getElementById('faqSearch').addEventListener('input', function(e) {
+            currentSearch = e.target.value;
+            renderFAQItems();
+        });
+
+        // Filter tag functionality - add click listeners to all filter tags
+        document.querySelectorAll('.filter-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                // Update active tag styling
+                document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+               
+                // Update current filter and re-render
+                currentFilter = this.dataset.tag;
+                renderFAQItems();
+            });
+        });
+
+        // Menu functionality
+       
+        // Menu element references
         const menuBtn = document.getElementById("barMenuBtn");
         const menuOverlay = document.getElementById("menuOverlay");
         const menuBars = document.getElementById("menuBars");
         const menuX = document.getElementById("menuX");
         let menuOpen = false;
         let menuCloseTimeout = null;
-
+       
+        // Open menu when hamburger button is clicked
         menuBtn.onclick = function(e) {
             e.stopPropagation();
             if (!menuOpen) {
@@ -482,8 +1016,14 @@
                 menuOverlay.classList.remove("closing");
                 menuBars.style.display = "none";
                 menuOpen = true;
+                menuBtn.style.transform = "scale(0.9)";
+                setTimeout(() => {
+                    menuBtn.style.transform = "scale(1)";
+                }, 150);
             }
         };
+       
+        // Close menu when X button is clicked
         menuX.onclick = function(e) {
             e.stopPropagation();
             if (menuOpen) {
@@ -491,64 +1031,87 @@
                 menuOverlay.classList.add("closing");
                 menuBars.style.display = "flex";
                 menuOpen = false;
+                menuX.style.transform = "scale(0.9)";
+                setTimeout(() => {
+                    menuX.style.transform = "scale(1)";
+                }, 150);
+               
+                // Clear closing animation timeout
                 clearTimeout(menuCloseTimeout);
                 menuCloseTimeout = setTimeout(() => {
                     menuOverlay.classList.remove("closing");
                 }, 350);
             }
         };
+       
+        // Close menu when clicking outside of menu content
         menuOverlay.onclick = function(e) {
             if(e.target === menuOverlay && menuOpen) {
                 menuX.onclick(e);
             }
         };
+       
+        // Helper function to close menu
         function closeMenu() {
             if (menuOpen) {
                 menuX.onclick(new Event("click"));
             }
         }
-
-        // Menu item navigation
+       
+        // Menu navigation handlers
         document.getElementById("menuHome").onclick = function() {
             closeMenu();
             window.location.href = "index.html";
         };
+       
         document.getElementById("menuPasswordMaker").onclick = function() {
             closeMenu();
             window.location.href = "password_maker.html";
         };
+       
         document.getElementById("menuPasswordChecker").onclick = function() {
             closeMenu();
             window.location.href = "password_checker.html";
         };
+       
         document.getElementById("menuSavedPasswords").onclick = function() {
             closeMenu();
             window.location.href = "password_saved.html";
         };
+       
         document.getElementById("menuFAQ").onclick = function() {
             closeMenu();
             window.location.href = "faq.html";
         };
+       
         document.getElementById("menuAbout").onclick = function() {
             closeMenu();
             window.open("https://kingfarooq.github.io", "_blank");
         };
+       
         document.getElementById("menuLogout").onclick = function() {
-            localStorage.removeItem("keysafe-logged-in");
+            clearLoggedInUser();
             window.location.href = "login_signup.html";
         };
 
-        // Security: If user is not logged in, redirect to login (optional)
-        if (!localStorage.getItem("keysafe-logged-in")) {
-            window.location.href = "login_signup.html";
+        // Initialize page
+        function initPage() {
+            // Redirect to login if not authenticated
+            if (!getLoggedInUser()) {
+                window.location.href = "login_signup.html";
+                return;
+            }
+           
+            // Initialize session timer
+            updateSessionTimer();
+            setInterval(updateSessionTimer, 1000);
+           
+            // Render FAQ items on page load
+            renderFAQItems();
         }
+
+        // Initialize page when DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', initPage);
     </script>
 </body>
 </html>
-
-<!--
-    Notes:
-    - Organized Q&A
-    - Clean UI
-    
--->
